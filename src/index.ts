@@ -7,7 +7,7 @@ const port = process.env.SERVER_PORT;
 const app = express();
 const router = Router();
 
-router.get("/teste", (_req, res) => {
+router.get("/teste", async (_req, res) => {
   res.json({ message: "Connected" });
   return;
 });
