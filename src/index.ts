@@ -3,7 +3,11 @@ import "./config/module-alias";
 import express, { Router } from "express";
 import cors from "cors";
 
-import { CreateUserController, GetUserByIdController } from "./controllers";
+import {
+  CreateUserController,
+  GetUserByIdController,
+  UpdateUserController,
+} from "./controllers";
 
 const port = process.env.SERVER_PORT;
 const app = express();
@@ -23,6 +27,12 @@ router.post("/users", async (req, res) => {
 
 router.get("/users/:id", async (req, res) => {
   const { statusCode, body } = await new GetUserByIdController().execute(req);
+  res.status(statusCode).json(body);
+  return;
+});
+
+router.patch("/users/:id", async (req, res) => {
+  const { statusCode, body } = await new UpdateUserController().execute(req);
   res.status(statusCode).json(body);
   return;
 });

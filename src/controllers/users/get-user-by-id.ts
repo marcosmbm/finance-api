@@ -1,4 +1,4 @@
-import { GetUserByIdUseCase } from "@/use-cases/user/get-user-by-id";
+import { GetUserByIdUseCase } from "@/use-cases";
 import type { Request } from "express";
 import validator from "validator";
 
