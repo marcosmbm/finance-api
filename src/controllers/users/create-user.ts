@@ -4,7 +4,7 @@ import validator from "validator";
 import {
   badRequestResponse,
   createdResponse,
-  internalServerResponse,
+  defaultErrorResponse,
 } from "../helpers/response";
 
 export class CreateUserController {
@@ -44,7 +44,7 @@ export class CreateUserController {
       return createdResponse(createdUser);
     } catch (error) {
       console.error(error);
-      return internalServerResponse();
+      return defaultErrorResponse(error);
     }
   }
 }

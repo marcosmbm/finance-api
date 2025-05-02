@@ -1,3 +1,5 @@
+import { EmailAlreadyInUseError } from "@/errors";
+
 function response<T = any>(statusCode: number, body: T) {
   return {
     statusCode,
@@ -19,4 +21,12 @@ export function internalServerResponse() {
 
 export function createdResponse<T = any>(body: T) {
   return response(201, body);
+}
+
+export function defaultErrorResponse(error: unknown) {
+  if (error instanceof EmailAlreadyInUseError) {
+    return badRequestResponse(error.message);
+  }
+
+  return internalServerResponse();
 }

@@ -1,4 +1,5 @@
-import { CreateUserRepository } from "@/repositories";
+import { EmailAlreadyInUseError } from "@/errors";
+import { CreateUserRepository, GetUserByEmailRepository } from "@/repositories";
 import bcrypt from "bcryptjs";
 import { v4 as uuidv4 } from "uuid";
 
@@ -11,7 +12,13 @@ interface CreateUserUseCaseInput {
 
 export class CreateUserUseCase {
   async execute(createUserParams: CreateUserUseCaseInput) {
-    //verificar se o email ja está em uso (TODO)
+    const user = await new GetUserByEmailRepository().execute(
+      createUserParams.email,
+    );
+
+    if (user) {
+      throw new EmailAlreadyInUseError(createUserParams.email);
+    }
 
     //gerar novo id
     const userId = uuidv4();
