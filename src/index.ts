@@ -3,12 +3,21 @@ import "./config/module-alias";
 import express, { Router } from "express";
 import cors from "cors";
 
+import { CreateUserController } from "./controllers";
+
 const port = process.env.SERVER_PORT;
 const app = express();
 const router = Router();
 
 router.get("/teste", async (_req, res) => {
   res.json({ message: "Connected" });
+  return;
+});
+
+//users
+router.post("/users", async (req, res) => {
+  const { statusCode, body } = await new CreateUserController().execute(req);
+  res.status(statusCode).json(body);
   return;
 });
 
