@@ -1,4 +1,4 @@
-import { EmailAlreadyInUseError } from "@/errors";
+import { EmailAlreadyInUseError, UserNotFoundError } from "@/errors";
 
 function response<T = any>(statusCode: number, body: T) {
   return {
@@ -23,8 +23,16 @@ export function createdResponse<T = any>(body: T) {
   return response(201, body);
 }
 
+export function okResponse<T = any>(body: T) {
+  return response(200, body);
+}
+
 export function defaultErrorResponse(error: unknown) {
   if (error instanceof EmailAlreadyInUseError) {
+    return badRequestResponse(error.message);
+  }
+
+  if (error instanceof UserNotFoundError) {
     return badRequestResponse(error.message);
   }
 

@@ -3,7 +3,7 @@ import "./config/module-alias";
 import express, { Router } from "express";
 import cors from "cors";
 
-import { CreateUserController } from "./controllers";
+import { CreateUserController, GetUserByIdController } from "./controllers";
 
 const port = process.env.SERVER_PORT;
 const app = express();
@@ -17,6 +17,12 @@ router.get("/teste", async (_req, res) => {
 //users
 router.post("/users", async (req, res) => {
   const { statusCode, body } = await new CreateUserController().execute(req);
+  res.status(statusCode).json(body);
+  return;
+});
+
+router.get("/users/:id", async (req, res) => {
+  const { statusCode, body } = await new GetUserByIdController().execute(req);
   res.status(statusCode).json(body);
   return;
 });
