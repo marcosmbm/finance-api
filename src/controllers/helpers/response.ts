@@ -13,6 +13,12 @@ export function badRequestResponse(message: string) {
   });
 }
 
+export function notFoundResponse(message: string) {
+  return response(404, {
+    message,
+  });
+}
+
 export function internalServerResponse() {
   return response(500, {
     message: "Internal server error",
@@ -33,7 +39,7 @@ export function defaultErrorResponse(error: unknown) {
   }
 
   if (error instanceof UserNotFoundError) {
-    return badRequestResponse(error.message);
+    return notFoundResponse(error.message);
   }
 
   return internalServerResponse();
