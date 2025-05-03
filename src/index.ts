@@ -7,6 +7,7 @@ import {
   CreateUserController,
   GetUserByIdController,
   UpdateUserController,
+  DeleteUserController,
 } from "./controllers";
 
 const port = process.env.SERVER_PORT;
@@ -33,6 +34,12 @@ router.get("/users/:id", async (req, res) => {
 
 router.patch("/users/:id", async (req, res) => {
   const { statusCode, body } = await new UpdateUserController().execute(req);
+  res.status(statusCode).json(body);
+  return;
+});
+
+router.delete("/users/:id", async (req, res) => {
+  const { statusCode, body } = await new DeleteUserController().execute(req);
   res.status(statusCode).json(body);
   return;
 });
