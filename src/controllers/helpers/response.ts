@@ -1,46 +1,17 @@
-import { EmailAlreadyInUseError, UserNotFoundError } from "@/errors";
+import { badRequestResponse } from "./http";
 
-function response<T = any>(statusCode: number, body: T) {
-  return {
-    statusCode,
-    body,
-  };
+export function invalidPasswordResponse() {
+  return badRequestResponse("Password must be at least 6 characters");
 }
 
-export function badRequestResponse(message: string) {
-  return response(400, {
-    message,
-  });
+export function invalidEmailResponse() {
+  return badRequestResponse("Email invalid. Please, provider a valid one");
 }
 
-export function notFoundResponse(message: string) {
-  return response(404, {
-    message,
-  });
+export function invalidUuidResponse() {
+  return badRequestResponse("Uuid invalid. Please, provider a valid one");
 }
 
-export function internalServerResponse() {
-  return response(500, {
-    message: "Internal server error",
-  });
-}
-
-export function createdResponse<T = any>(body: T) {
-  return response(201, body);
-}
-
-export function okResponse<T = any>(body: T) {
-  return response(200, body);
-}
-
-export function defaultErrorResponse(error: unknown) {
-  if (error instanceof EmailAlreadyInUseError) {
-    return badRequestResponse(error.message);
-  }
-
-  if (error instanceof UserNotFoundError) {
-    return notFoundResponse(error.message);
-  }
-
-  return internalServerResponse();
+export function invalidParamsResponse() {
+  return badRequestResponse("Params invalid");
 }
