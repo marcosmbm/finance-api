@@ -4,6 +4,7 @@ import {
   badRequestResponse,
   checkIfEmailIsValid,
   checkIfFieldsIsInvalid,
+  checkIfPasswordIsValid,
   createdResponse,
   defaultErrorResponse,
   invalidEmailResponse,
@@ -22,7 +23,7 @@ export class CreateUserController {
         return badRequestResponse(fieldsInvalid);
       }
 
-      const passwordIsValid = checkIfEmailIsValid(data.password);
+      const passwordIsValid = checkIfPasswordIsValid(data.password);
 
       if (!passwordIsValid) {
         return invalidPasswordResponse();
