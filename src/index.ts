@@ -9,6 +9,8 @@ import {
   UpdateUserController,
   DeleteUserController,
 } from "./controllers";
+import { GetUserByIdUseCase } from "./use-cases";
+import { GetUserByIdRepository } from "./repositories";
 
 const port = process.env.SERVER_PORT;
 const app = express();
@@ -27,7 +29,11 @@ router.post("/users", async (req, res) => {
 });
 
 router.get("/users/:id", async (req, res) => {
-  const { statusCode, body } = await new GetUserByIdController().execute(req);
+  const getUserByIdRepository = new GetUserByIdRepository();
+  const getUserByIdUseCase = new GetUserByIdUseCase(getUserByIdRepository);
+  const { statusCode, body } = await new GetUserByIdController(
+    getUserByIdUseCase,
+  ).execute(req);
   res.status(statusCode).json(body);
   return;
 });

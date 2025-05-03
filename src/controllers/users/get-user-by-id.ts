@@ -1,4 +1,4 @@
-import { GetUserByIdUseCase } from "@/use-cases";
+import type { GetUserByIdUseCase } from "@/use-cases";
 import type { Request } from "express";
 
 import {
@@ -9,6 +9,12 @@ import {
 } from "../helpers";
 
 export class GetUserByIdController {
+  private getUserByIdUseCase: GetUserByIdUseCase;
+
+  constructor(getUserByIdUseCase: GetUserByIdUseCase) {
+    this.getUserByIdUseCase = getUserByIdUseCase;
+  }
+
   async execute(httpRequest: Request) {
     try {
       const id = httpRequest.params.id;
@@ -19,7 +25,7 @@ export class GetUserByIdController {
         return invalidUuidResponse();
       }
 
-      const user = await new GetUserByIdUseCase().execute(id);
+      const user = await this.getUserByIdUseCase.execute(id);
 
       return okResponse(user);
     } catch (error) {
