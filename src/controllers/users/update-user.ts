@@ -1,4 +1,4 @@
-import { UpdateUserUseCase } from "@/use-cases";
+import type { UpdateUserUseCase } from "@/use-cases";
 import type { Request } from "express";
 import {
   badRequestResponse,
@@ -14,6 +14,12 @@ import {
 } from "../helpers";
 
 export class UpdateUserController {
+  private updateUserUseCase: UpdateUserUseCase;
+
+  constructor(updateUserUseCase: UpdateUserUseCase) {
+    this.updateUserUseCase = updateUserUseCase;
+  }
+
   async execute(httpRequest: Request) {
     try {
       const id = httpRequest.params.id;
@@ -58,7 +64,7 @@ export class UpdateUserController {
         }
       }
 
-      const createdUser = await new UpdateUserUseCase().execute({
+      const createdUser = await this.updateUserUseCase.execute({
         id,
         ...data,
       });

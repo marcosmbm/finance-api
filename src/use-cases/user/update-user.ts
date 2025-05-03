@@ -1,5 +1,5 @@
 import { EmailAlreadyInUseError, UserNotFoundError } from "@/errors";
-import {
+import type {
   GetUserByEmailRepository,
   UpdateUserRepository,
   GetUserByIdRepository,
@@ -13,8 +13,22 @@ interface UpdateUserUseCaseInput {
 }
 
 export class UpdateUserUseCase {
+  private updateUserRepository: UpdateUserRepository;
+  private getUserByEmailRepository: GetUserByEmailRepository;
+  private getUserByIdRepository: GetUserByIdRepository;
+
+  constructor(
+    updateUserRepository: UpdateUserRepository,
+    getUserByEmailRepository: GetUserByEmailRepository,
+    getUserByIdRepository: GetUserByIdRepository,
+  ) {
+    this.updateUserRepository = updateUserRepository;
+    this.getUserByEmailRepository = getUserByEmailRepository;
+    this.getUserByIdRepository = getUserByIdRepository;
+  }
+
   async execute(updateUserParams: UpdateUserUseCaseInput) {
-    const getUserById = await new GetUserByIdRepository().execute(
+    const getUserById = await this.getUserByIdRepository.execute(
       updateUserParams.id,
     );
 
@@ -23,7 +37,7 @@ export class UpdateUserUseCase {
     }
 
     if (updateUserParams.email) {
-      const user = await new GetUserByEmailRepository().execute(
+      const user = await this.getUserByEmailRepository.execute(
         updateUserParams.email,
       );
 
@@ -32,9 +46,7 @@ export class UpdateUserUseCase {
       }
     }
 
-    const repository = new UpdateUserRepository();
-
     const { id, ...restUpdateUserParams } = updateUserParams;
-    return await repository.execute(id, restUpdateUserParams);
+    return await this.updateUserRepository.execute(id, restUpdateUserParams);
   }
 }

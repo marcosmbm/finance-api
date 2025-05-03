@@ -9,11 +9,18 @@ import {
   UpdateUserController,
   DeleteUserController,
 } from "./controllers";
-import { CreateUserUseCase, GetUserByIdUseCase } from "./use-cases";
+
+import {
+  CreateUserUseCase,
+  GetUserByIdUseCase,
+  UpdateUserUseCase,
+} from "./use-cases";
+
 import {
   CreateUserRepository,
   GetUserByEmailRepository,
   GetUserByIdRepository,
+  UpdateUserRepository,
 } from "./repositories";
 
 const port = process.env.SERVER_PORT;
@@ -54,7 +61,19 @@ router.get("/users/:id", async (req, res) => {
 });
 
 router.patch("/users/:id", async (req, res) => {
-  const { statusCode, body } = await new UpdateUserController().execute(req);
+  const updateUserRepository = new UpdateUserRepository();
+  const getUserByEmailRepository = new GetUserByEmailRepository();
+  const getUserByIdRepository = new GetUserByIdRepository();
+
+  const updateUserUseCase = new UpdateUserUseCase(
+    updateUserRepository,
+    getUserByEmailRepository,
+    getUserByIdRepository,
+  );
+
+  const { statusCode, body } = await new UpdateUserController(
+    updateUserUseCase,
+  ).execute(req);
   res.status(statusCode).json(body);
   return;
 });
