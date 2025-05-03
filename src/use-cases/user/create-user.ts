@@ -1,5 +1,8 @@
 import { EmailAlreadyInUseError } from "@/errors";
-import { CreateUserRepository, GetUserByEmailRepository } from "@/repositories";
+import type {
+  CreateUserRepository,
+  GetUserByEmailRepository,
+} from "@/repositories";
 import bcrypt from "bcryptjs";
 import { v4 as uuidv4 } from "uuid";
 
@@ -11,8 +14,19 @@ interface CreateUserUseCaseInput {
 }
 
 export class CreateUserUseCase {
+  private createUserRepository: CreateUserRepository;
+  private getUserByEmailRepository: GetUserByEmailRepository;
+
+  constructor(
+    createUserRepository: CreateUserRepository,
+    getUserByEmailRepository: GetUserByEmailRepository,
+  ) {
+    this.createUserRepository = createUserRepository;
+    this.getUserByEmailRepository = getUserByEmailRepository;
+  }
+
   async execute(createUserParams: CreateUserUseCaseInput) {
-    const user = await new GetUserByEmailRepository().execute(
+    const user = await this.getUserByEmailRepository.execute(
       createUserParams.email,
     );
 
@@ -20,10 +34,8 @@ export class CreateUserUseCase {
       throw new EmailAlreadyInUseError(createUserParams.email);
     }
 
-    //gerar novo id
     const userId = uuidv4();
 
-    //criptografar a senha
     const saltRounds = Number(process.env.BCRYPT_SALT_ROUNDS);
 
     const hashedPassword = bcrypt.hashSync(
@@ -31,10 +43,7 @@ export class CreateUserUseCase {
       saltRounds,
     );
 
-    //inserir no banco de dados
-    const repository = new CreateUserRepository();
-
-    return await repository.execute({
+    return await this.createUserRepository.execute({
       ...createUserParams,
       id: userId,
       password: hashedPassword,

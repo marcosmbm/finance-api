@@ -1,4 +1,4 @@
-import { CreateUserUseCase } from "@/use-cases";
+import type { CreateUserUseCase } from "@/use-cases";
 import type { Request } from "express";
 import {
   badRequestResponse,
@@ -12,6 +12,12 @@ import {
 } from "../helpers";
 
 export class CreateUserController {
+  private createUserUseCase: CreateUserUseCase;
+
+  constructor(createUserUseCase: CreateUserUseCase) {
+    this.createUserUseCase = createUserUseCase;
+  }
+
   async execute(httpRequest: Request) {
     try {
       const data = httpRequest.body;
@@ -34,7 +40,7 @@ export class CreateUserController {
         return invalidEmailResponse();
       }
 
-      const createdUser = await new CreateUserUseCase().execute(data);
+      const createdUser = await this.createUserUseCase.execute(data);
 
       return createdResponse(createdUser);
     } catch (error) {
