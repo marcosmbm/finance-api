@@ -1,4 +1,4 @@
-import { DeleteUserUseCase } from "@/use-cases";
+import type { DeleteUserUseCase } from "@/use-cases";
 import type { Request } from "express";
 
 import {
@@ -9,6 +9,12 @@ import {
 } from "../helpers";
 
 export class DeleteUserController {
+  private deleteUserUseCase: DeleteUserUseCase;
+
+  constructor(deleteUserUseCase: DeleteUserUseCase) {
+    this.deleteUserUseCase = deleteUserUseCase;
+  }
+
   async execute(httpRequest: Request) {
     try {
       const id = httpRequest.params.id;
@@ -19,7 +25,7 @@ export class DeleteUserController {
         return invalidUuidResponse();
       }
 
-      const user = await new DeleteUserUseCase().execute(id);
+      const user = await this.deleteUserUseCase.execute(id);
 
       return okResponse(user);
     } catch (error) {

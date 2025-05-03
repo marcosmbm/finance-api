@@ -12,12 +12,14 @@ import {
 
 import {
   CreateUserUseCase,
+  DeleteUserUseCase,
   GetUserByIdUseCase,
   UpdateUserUseCase,
 } from "./use-cases";
 
 import {
   CreateUserRepository,
+  DeleteUserRepository,
   GetUserByEmailRepository,
   GetUserByIdRepository,
   UpdateUserRepository,
@@ -79,7 +81,17 @@ router.patch("/users/:id", async (req, res) => {
 });
 
 router.delete("/users/:id", async (req, res) => {
-  const { statusCode, body } = await new DeleteUserController().execute(req);
+  const deleteUserRepository = new DeleteUserRepository();
+  const getUserByIdRepository = new GetUserByIdRepository();
+
+  const deleteUserUseCase = new DeleteUserUseCase(
+    deleteUserRepository,
+    getUserByIdRepository,
+  );
+
+  const { statusCode, body } = await new DeleteUserController(
+    deleteUserUseCase,
+  ).execute(req);
   res.status(statusCode).json(body);
   return;
 });
