@@ -4,26 +4,11 @@ import express, { Router } from "express";
 import cors from "cors";
 
 import {
-  CreateUserController,
-  GetUserByIdController,
-  UpdateUserController,
-  DeleteUserController,
-} from "./controllers";
-
-import {
-  CreateUserUseCase,
-  DeleteUserUseCase,
-  GetUserByIdUseCase,
-  UpdateUserUseCase,
-} from "./use-cases";
-
-import {
-  CreateUserRepository,
-  DeleteUserRepository,
-  GetUserByEmailRepository,
-  GetUserByIdRepository,
-  UpdateUserRepository,
-} from "./repositories";
+  makeCreateUserController,
+  makeDeleteUserController,
+  makeGetUserByIdController,
+  makeUpdateUserController,
+} from "./factories";
 
 const port = process.env.SERVER_PORT;
 const app = express();
@@ -36,62 +21,25 @@ router.get("/teste", async (_req, res) => {
 
 //users
 router.post("/users", async (req, res) => {
-  const createUserRepository = new CreateUserRepository();
-  const getUserByEmailRepository = new GetUserByEmailRepository();
-
-  const createUserUseCase = new CreateUserUseCase(
-    createUserRepository,
-    getUserByEmailRepository,
-  );
-
-  const { statusCode, body } = await new CreateUserController(
-    createUserUseCase,
-  ).execute(req);
-
+  const { statusCode, body } = await makeCreateUserController().execute(req);
   res.status(statusCode).json(body);
   return;
 });
 
 router.get("/users/:id", async (req, res) => {
-  const getUserByIdRepository = new GetUserByIdRepository();
-  const getUserByIdUseCase = new GetUserByIdUseCase(getUserByIdRepository);
-  const { statusCode, body } = await new GetUserByIdController(
-    getUserByIdUseCase,
-  ).execute(req);
+  const { statusCode, body } = await makeGetUserByIdController().execute(req);
   res.status(statusCode).json(body);
   return;
 });
 
 router.patch("/users/:id", async (req, res) => {
-  const updateUserRepository = new UpdateUserRepository();
-  const getUserByEmailRepository = new GetUserByEmailRepository();
-  const getUserByIdRepository = new GetUserByIdRepository();
-
-  const updateUserUseCase = new UpdateUserUseCase(
-    updateUserRepository,
-    getUserByEmailRepository,
-    getUserByIdRepository,
-  );
-
-  const { statusCode, body } = await new UpdateUserController(
-    updateUserUseCase,
-  ).execute(req);
+  const { statusCode, body } = await makeUpdateUserController().execute(req);
   res.status(statusCode).json(body);
   return;
 });
 
 router.delete("/users/:id", async (req, res) => {
-  const deleteUserRepository = new DeleteUserRepository();
-  const getUserByIdRepository = new GetUserByIdRepository();
-
-  const deleteUserUseCase = new DeleteUserUseCase(
-    deleteUserRepository,
-    getUserByIdRepository,
-  );
-
-  const { statusCode, body } = await new DeleteUserController(
-    deleteUserUseCase,
-  ).execute(req);
+  const { statusCode, body } = await makeDeleteUserController().execute(req);
   res.status(statusCode).json(body);
   return;
 });
