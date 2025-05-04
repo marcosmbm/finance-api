@@ -4,6 +4,7 @@ import express, { Router } from "express";
 import cors from "cors";
 
 import {
+  makeCreateTransactionController,
   makeCreateUserController,
   makeDeleteUserController,
   makeGetUserByIdController,
@@ -40,6 +41,15 @@ router.patch("/users/:id", async (req, res) => {
 
 router.delete("/users/:id", async (req, res) => {
   const { statusCode, body } = await makeDeleteUserController().execute(req);
+  res.status(statusCode).json(body);
+  return;
+});
+
+//transactions
+router.post("/transactions", async (req, res) => {
+  const { statusCode, body } =
+    await makeCreateTransactionController().execute(req);
+
   res.status(statusCode).json(body);
   return;
 });
