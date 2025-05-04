@@ -17,54 +17,54 @@ module.exports = function (plop){
     actions: [
       {
         type: "add",
-        path: "../src/repositories/postgres/{{camelCase entity}}/{{camelCase name}}.ts",
+        path: "../src/repositories/postgres/{{kebabCase entity}}/{{kebabCase name}}.ts",
         templateFile: "./templates/repository.hbs",
       },
       {
         type: "add",
-        path: "../src/repositories/postgres/{{camelCase entity}}/index.ts",
+        path: "../src/repositories/postgres/{{kebabCase entity}}/index.ts",
         templateFile: "./templates/index.hbs",
         skipIfExists: true
       },
       {
         type: "append",
-        path: "../src/repositories/postgres/{{camelCase entity}}/index.ts",
+        path: "../src/repositories/postgres/{{kebabCase entity}}/index.ts",
         pattern: /(\/\/ PLOP:EXPORT)/,
-        template: 'export * from "./{{camelCase name}}";',
+        template: 'export * from "./{{kebabCase name}}";',
       },
       {
         type: "add",
-        path: "../src/use-cases/{{camelCase entity}}/{{camelCase name}}.ts",
+        path: "../src/use-cases/{{kebabCase entity}}/{{kebabCase name}}.ts",
         templateFile: "./templates/use-case.hbs",
       },
       {
         type: "add",
-        path: "../src/use-cases/{{camelCase entity}}/index.ts",
+        path: "../src/use-cases/{{kebabCase entity}}/index.ts",
         templateFile: "./templates/index.hbs",
         skipIfExists: true
       },
       {
         type: "append",
-        path: "../src/use-cases/{{camelCase entity}}/index.ts",
+        path: "../src/use-cases/{{kebabCase entity}}/index.ts",
         pattern: /(\/\/ PLOP:EXPORT)/,
-        template: 'export * from "./{{camelCase name}}";',
+        template: 'export * from "./{{kebabCase name}}";',
       },
       {
         type: "add",
-        path: "../src/controllers/{{camelCase entity}}/{{camelCase name}}.ts",
+        path: "../src/controllers/{{kebabCase entity}}/{{kebabCase name}}.ts",
         templateFile: "./templates/controller.hbs",
       },
       {
         type: "add",
-        path: "../src/controllers/{{camelCase entity}}/index.ts",
+        path: "../src/controllers/{{kebabCase entity}}/index.ts",
         templateFile: "./templates/index.hbs",
         skipIfExists: true
       },
       {
         type: "append",
-        path: "../src/controllers/{{camelCase entity}}/index.ts",
+        path: "../src/controllers/{{kebabCase entity}}/index.ts",
         pattern: /(\/\/ PLOP:EXPORT)/,
-        template: 'export * from "./{{camelCase name}}";',
+        template: 'export * from "./{{kebabCase name}}";',
       },
     ],
   });
