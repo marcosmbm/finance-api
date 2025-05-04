@@ -15,3 +15,21 @@ export function invalidUuidResponse() {
 export function invalidParamsResponse() {
   return badRequestResponse("Params invalid");
 }
+
+export function invalidRequiredFieldsResponse(field: string) {
+  return badRequestResponse(`Missing param: ${field}`);
+}
+
+export function invalidAmountResponse() {
+  return badRequestResponse("The amount must be a valid currency");
+}
+
+export function invalidTransactionTypeResponse() {
+  return badRequestResponse("Transaction type must be 'EARNING' or 'EXPENSE'");
+}
+
+export function invalidDateResponse() {
+  return badRequestResponse(
+    "Date invalid. Please, provider a valid date with the format (YYY-MM-DD).",
+  );
+}
