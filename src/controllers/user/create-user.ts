@@ -3,7 +3,7 @@ import type { Request } from "express";
 import {
   badRequestResponse,
   checkIfEmailIsValid,
-  checkIfFieldsIsInvalid,
+  checkIfRequiredFieldsIsInvalid,
   checkIfPasswordIsValid,
   createdResponse,
   defaultErrorResponse,
@@ -23,7 +23,10 @@ export class CreateUserController {
       const data = httpRequest.body;
 
       const requiredFields = ["first_name", "last_name", "email", "password"];
-      const fieldsInvalid = checkIfFieldsIsInvalid(data, requiredFields);
+      const fieldsInvalid = checkIfRequiredFieldsIsInvalid(
+        data,
+        requiredFields,
+      );
 
       if (fieldsInvalid) {
         return badRequestResponse(fieldsInvalid);
