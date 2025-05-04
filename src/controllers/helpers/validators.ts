@@ -18,9 +18,13 @@ export function checkIfEmailIsValid(email: string) {
   return validator.isEmail(email);
 }
 
-export function checkIfFieldsIsInvalid(data: any, fields: string[]) {
+export function checkIfRequiredFieldsIsInvalid(data: any, fields: string[]) {
   for (const field of fields) {
-    if (!data[field] || String(data[field]).trim() === "") {
+    if (data[field] === undefined) {
+      return field;
+    }
+
+    if (String(data[field]).trim() === "") {
       return field;
     }
   }
@@ -39,4 +43,28 @@ export function checkIfHasDisallowedFields(data: any, fields: string[]) {
   );
 
   return someFieldsNotAllowed;
+}
+
+export function checkIfAmountIsCurrency(amount: string) {
+  if (Number(amount) <= 0) {
+    return false;
+  }
+
+  return validator.isCurrency(amount, {
+    digits_after_decimal: [2],
+    allow_decimal: true,
+    decimal_separator: ".",
+  });
+}
+
+export function checkIfTransactionTypeIsValid(type: string) {
+  const types = ["EARNING", "EXPENSE"];
+
+  return types.includes(type);
+}
+
+export function checkIfDateIsValid(date: string) {
+  return validator.isDate(date, {
+    format: "YYYY-MM-DD",
+  });
 }
