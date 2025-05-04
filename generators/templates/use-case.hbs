@@ -1,0 +1,12 @@
+import type { {{pascalCase name}}Repository } from "@/repositories";
+
+export class {{pascalCase name}}UseCase {
+private {{camelCase name}}Repository: {{pascalCase name}}Repository;
+
+constructor({{camelCase name}}Repository: {{pascalCase name}}Repository) {
+this.{{camelCase name}}Repository = {{camelCase name}}Repository;
+}
+
+async execute(id: string) {
+}
+}

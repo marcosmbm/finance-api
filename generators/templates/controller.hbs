@@ -1,0 +1,23 @@
+import type { {{pascalCase name}}UseCase } from "@/use-cases";
+import type { Request } from "express";
+
+import {
+defaultErrorResponse,
+okResponse,
+} from "../helpers";
+
+export class {{pascalCase name}}Controller {
+private {{camelCase name}}UseCase: {{pascalCase name}}UseCase;
+
+constructor({{camelCase name}}UseCase: {{pascalCase name}}UseCase) {
+this.{{camelCase name}}UseCase = {{camelCase name}}UseCase;
+}
+
+async execute(httpRequest: Request) {
+try {
+return okResponse("ok");
+} catch (error) {
+return defaultErrorResponse(error);
+}
+}
+}

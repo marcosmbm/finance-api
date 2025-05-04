@@ -17,7 +17,7 @@
         "useSortedClasses": "error"
       }
     },
-    "ignore": ["node_modules", "dist"]
+    "ignore": ["node_modules", "dist", "generators"]
   },
   "formatter": {
     "enabled": true,
@@ -25,7 +25,8 @@
     "indentStyle": "space",
     "indentWidth": 2,
     "lineWidth": 80,
-    "lineEnding": "lf"
+    "lineEnding": "lf",
+    "ignore": ["generators"]
   },
   "javascript": {
     "formatter": {
