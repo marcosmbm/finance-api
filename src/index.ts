@@ -9,6 +9,7 @@ import {
   makeDeleteUserController,
   makeGetUserByIdController,
   makeUpdateUserController,
+  makeGetTransactionsByUserIdController,
 } from "./factories";
 
 const port = process.env.SERVER_PORT;
@@ -49,6 +50,14 @@ router.delete("/users/:id", async (req, res) => {
 router.post("/transactions", async (req, res) => {
   const { statusCode, body } =
     await makeCreateTransactionController().execute(req);
+
+  res.status(statusCode).json(body);
+  return;
+});
+
+router.get("/transactions", async (req, res) => {
+  const { statusCode, body } =
+    await makeGetTransactionsByUserIdController().execute(req);
 
   res.status(statusCode).json(body);
   return;

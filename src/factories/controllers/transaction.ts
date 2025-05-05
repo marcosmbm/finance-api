@@ -1,11 +1,18 @@
-import { CreateTransactionController } from "@/controllers";
+import {
+  CreateTransactionController,
+  GetTransactionsByUserIdController,
+} from "@/controllers";
 
 import {
   CreateTransactionRepository,
+  GetTransactionsByUserIdRepository,
   GetUserByIdRepository,
 } from "@/repositories";
 
-import { CreateTransactionUseCase } from "@/use-cases";
+import {
+  CreateTransactionUseCase,
+  GetTransactionsByUserIdUseCase,
+} from "@/use-cases";
 
 export function makeCreateTransactionController() {
   const createTransactionRepository = new CreateTransactionRepository();
@@ -17,4 +24,18 @@ export function makeCreateTransactionController() {
   );
 
   return new CreateTransactionController(createTransactionUseCase);
+}
+
+export function makeGetTransactionsByUserIdController() {
+  const getTransactionsByUserIdRepository =
+    new GetTransactionsByUserIdRepository();
+
+  const getUserByIdRepository = new GetUserByIdRepository();
+
+  const getTransactionsByUserIdUseCase = new GetTransactionsByUserIdUseCase(
+    getTransactionsByUserIdRepository,
+    getUserByIdRepository,
+  );
+
+  return new GetTransactionsByUserIdController(getTransactionsByUserIdUseCase);
 }
