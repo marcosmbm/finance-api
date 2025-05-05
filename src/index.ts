@@ -11,6 +11,7 @@ import {
   makeUpdateUserController,
   makeGetTransactionsByUserIdController,
   makeUpdateTransactionController,
+  makeDeleteTransactionController,
 } from "./factories";
 
 const port = process.env.SERVER_PORT;
@@ -67,6 +68,14 @@ router.get("/transactions", async (req, res) => {
 router.patch("/transactions/:id", async (req, res) => {
   const { statusCode, body } =
     await makeUpdateTransactionController().execute(req);
+
+  res.status(statusCode).json(body);
+  return;
+});
+
+router.delete("/transactions/:id", async (req, res) => {
+  const { statusCode, body } =
+    await makeDeleteTransactionController().execute(req);
 
   res.status(statusCode).json(body);
   return;

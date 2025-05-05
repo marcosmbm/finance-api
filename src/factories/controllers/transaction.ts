@@ -1,11 +1,13 @@
 import {
   CreateTransactionController,
+  DeleteTransactionController,
   GetTransactionsByUserIdController,
   UpdateTransactionController,
 } from "@/controllers";
 
 import {
   CreateTransactionRepository,
+  DeleteTransactionRepository,
   GetTransactionByIdRepository,
   GetTransactionsByUserIdRepository,
   GetUserByIdRepository,
@@ -14,6 +16,7 @@ import {
 
 import {
   CreateTransactionUseCase,
+  DeleteTransactionUseCase,
   GetTransactionsByUserIdUseCase,
   UpdateTransactionUseCase,
 } from "@/use-cases";
@@ -54,4 +57,16 @@ export function makeUpdateTransactionController() {
   );
 
   return new UpdateTransactionController(updateTransactionUseCase);
+}
+
+export function makeDeleteTransactionController() {
+  const deleteTransactionRepository = new DeleteTransactionRepository();
+  const getTransactionByIdRepository = new GetTransactionByIdRepository();
+
+  const deleteTransactionUseCase = new DeleteTransactionUseCase(
+    deleteTransactionRepository,
+    getTransactionByIdRepository,
+  );
+
+  return new DeleteTransactionController(deleteTransactionUseCase);
 }

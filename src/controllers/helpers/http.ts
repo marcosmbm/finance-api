@@ -1,4 +1,8 @@
-import { EmailAlreadyInUseError, UserNotFoundError } from "@/errors";
+import {
+  EmailAlreadyInUseError,
+  TransactionNotFoundError,
+  UserNotFoundError,
+} from "@/errors";
 
 function response<T = any>(statusCode: number, body: T) {
   return {
@@ -39,6 +43,10 @@ export function defaultErrorResponse(error: unknown) {
   }
 
   if (error instanceof UserNotFoundError) {
+    return notFoundResponse(error.message);
+  }
+
+  if (error instanceof TransactionNotFoundError) {
     return notFoundResponse(error.message);
   }
 
