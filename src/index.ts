@@ -10,6 +10,7 @@ import {
   makeGetUserByIdController,
   makeUpdateUserController,
   makeGetTransactionsByUserIdController,
+  makeUpdateTransactionController,
 } from "./factories";
 
 const port = process.env.SERVER_PORT;
@@ -58,6 +59,14 @@ router.post("/transactions", async (req, res) => {
 router.get("/transactions", async (req, res) => {
   const { statusCode, body } =
     await makeGetTransactionsByUserIdController().execute(req);
+
+  res.status(statusCode).json(body);
+  return;
+});
+
+router.patch("/transactions/:id", async (req, res) => {
+  const { statusCode, body } =
+    await makeUpdateTransactionController().execute(req);
 
   res.status(statusCode).json(body);
   return;

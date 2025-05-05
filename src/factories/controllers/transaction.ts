@@ -1,17 +1,21 @@
 import {
   CreateTransactionController,
   GetTransactionsByUserIdController,
+  UpdateTransactionController,
 } from "@/controllers";
 
 import {
   CreateTransactionRepository,
+  GetTransactionByIdRepository,
   GetTransactionsByUserIdRepository,
   GetUserByIdRepository,
+  UpdateTransactionRepository,
 } from "@/repositories";
 
 import {
   CreateTransactionUseCase,
   GetTransactionsByUserIdUseCase,
+  UpdateTransactionUseCase,
 } from "@/use-cases";
 
 export function makeCreateTransactionController() {
@@ -38,4 +42,16 @@ export function makeGetTransactionsByUserIdController() {
   );
 
   return new GetTransactionsByUserIdController(getTransactionsByUserIdUseCase);
+}
+
+export function makeUpdateTransactionController() {
+  const updateTransactionRepository = new UpdateTransactionRepository();
+  const getTransactionByIdRepository = new GetTransactionByIdRepository();
+
+  const updateTransactionUseCase = new UpdateTransactionUseCase(
+    updateTransactionRepository,
+    getTransactionByIdRepository,
+  );
+
+  return new UpdateTransactionController(updateTransactionUseCase);
 }
