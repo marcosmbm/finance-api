@@ -71,6 +71,7 @@ export class CreateTransactionController {
         ...data,
         amount,
         date,
+        type,
       });
       return createdResponse(transaction);
     } catch (error) {
