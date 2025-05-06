@@ -3,3 +3,4 @@ export * from "./update-user";
 export * from "./get-user-by-id";
 export * from "./delete-user";
 // PLOP:EXPORT
+export * from "./get-user-balance";

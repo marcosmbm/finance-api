@@ -12,6 +12,7 @@ import {
   makeGetTransactionsByUserIdController,
   makeUpdateTransactionController,
   makeDeleteTransactionController,
+  makeGetUserBalance,
 } from "./factories";
 
 const port = process.env.SERVER_PORT;
@@ -44,6 +45,12 @@ router.patch("/users/:id", async (req, res) => {
 
 router.delete("/users/:id", async (req, res) => {
   const { statusCode, body } = await makeDeleteUserController().execute(req);
+  res.status(statusCode).json(body);
+  return;
+});
+
+router.get("/users/:id/balance", async (req, res) => {
+  const { statusCode, body } = await makeGetUserBalance().execute(req);
   res.status(statusCode).json(body);
   return;
 });

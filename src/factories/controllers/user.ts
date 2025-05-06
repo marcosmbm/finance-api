@@ -1,6 +1,7 @@
 import {
   CreateUserController,
   DeleteUserController,
+  GetUserBalanceController,
   GetUserByIdController,
   UpdateUserController,
 } from "@/controllers";
@@ -8,6 +9,7 @@ import {
 import {
   CreateUserUseCase,
   DeleteUserUseCase,
+  GetUserBalanceUseCase,
   GetUserByIdUseCase,
   UpdateUserUseCase,
 } from "@/use-cases";
@@ -15,6 +17,7 @@ import {
 import {
   CreateUserRepository,
   DeleteUserRepository,
+  GetUserBalanceRepository,
   GetUserByEmailRepository,
   GetUserByIdRepository,
   UpdateUserRepository,
@@ -62,4 +65,16 @@ export function makeDeleteUserController() {
   );
 
   return new DeleteUserController(deleteUserUseCase);
+}
+
+export function makeGetUserBalance() {
+  const getUserBalanceRepository = new GetUserBalanceRepository();
+  const getUserByIdRepository = new GetUserByIdRepository();
+
+  const getUserBalanceUseCase = new GetUserBalanceUseCase(
+    getUserBalanceRepository,
+    getUserByIdRepository,
+  );
+
+  return new GetUserBalanceController(getUserBalanceUseCase);
 }
