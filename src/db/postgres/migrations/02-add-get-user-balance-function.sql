@@ -7,9 +7,9 @@ returns table (
 begin 
 	return query
 	select 
-		sum (t1.earning) as earnings,
-		sum (t1.expense) as expenses,
-		sum(t1.earning) - sum(t1.expense) as balance
+		coalesce(sum(t1.earning),0) as earnings,
+		coalesce(sum(t1.expense),0) as expenses,
+		coalesce(sum(t1.earning),0) - coalesce(sum(t1.expense),0) as balance
 	from (
 		select 
 			t.user_id,
