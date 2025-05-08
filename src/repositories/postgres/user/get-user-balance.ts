@@ -1,4 +1,4 @@
-import { postgresHelper } from "@/db/postgres/client";
+import { prisma } from "@/db/prisma";
 
 interface GetUserBalanceRepositoryOutput {
   earnings: number;
@@ -9,19 +9,37 @@ interface GetUserBalanceRepositoryOutput {
 
 export class GetUserBalanceRepository {
   async execute(userId: string): Promise<GetUserBalanceRepositoryOutput> {
-    const results = await postgresHelper<GetUserBalanceRepositoryOutput>(
-      `
-        select 
-            earnings,
-            expenses,
-            balance 
-        from get_user_balance($1)
-      `,
-      [userId],
-    );
+    const {
+      _sum: { amount: _totalErnings },
+    } = await prisma.transaction.aggregate({
+      _sum: {
+        amount: true,
+      },
+      where: {
+        user_id: userId,
+        type: "EARNING",
+      },
+    });
+
+    const {
+      _sum: { amount: _totalExpenses },
+    } = await prisma.transaction.aggregate({
+      _sum: {
+        amount: true,
+      },
+      where: {
+        user_id: userId,
+        type: "EXPENSE",
+      },
+    });
+
+    const totalErnings = Number(_totalErnings ?? 0);
+    const totalExpenses = Number(_totalExpenses ?? 0);
 
     return {
-      ...results[0],
+      balance: totalExpenses - totalErnings,
+      earnings: totalErnings,
+      expenses: totalExpenses,
       user_id: userId,
     };
   }

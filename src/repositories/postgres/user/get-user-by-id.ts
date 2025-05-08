@@ -1,4 +1,4 @@
-import { postgresHelper } from "@/db/postgres/client";
+import { prisma } from "@/db/prisma";
 
 interface GetUserByIdRepositoryOutput {
   id: string;
@@ -9,19 +9,16 @@ interface GetUserByIdRepositoryOutput {
 
 export class GetUserByIdRepository {
   async execute(id: string): Promise<GetUserByIdRepositoryOutput | null> {
-    const result = await postgresHelper<GetUserByIdRepositoryOutput>(
-      `
-        select 
-            id, 
-            first_name, 
-            last_name, 
-            email
-        from users
-        where id = $1
-    `,
-      [id],
-    );
-
-    return result[0] || null;
+    return await prisma.user.findUnique({
+      select: {
+        id: true,
+        first_name: true,
+        last_name: true,
+        email: true,
+      },
+      where: {
+        id: id,
+      },
+    });
   }
 }
