@@ -1,4 +1,4 @@
-import { postgresHelper } from "@/db/postgres/client";
+import { prisma } from "@/db/prisma";
 
 interface GetTransactionsByUserIdRepositoryOutput {
   id: string;
@@ -12,22 +12,25 @@ export class GetTransactionsByUserIdRepository {
   async execute(
     userId: string,
   ): Promise<GetTransactionsByUserIdRepositoryOutput[]> {
-    const result =
-      await postgresHelper<GetTransactionsByUserIdRepositoryOutput>(
-        `
-      select 
-        t.id,
-        t."name",
-        t."date",
-        t.amount,
-        t."type"
-      from transactions t 
-      where t.user_id = $1
-      order by "date" desc 
-    `,
-        [userId],
-      );
+    const transactions = await prisma.transaction.findMany({
+      select: {
+        id: true,
+        amount: true,
+        name: true,
+        date: true,
+        type: true,
+        user_id: true,
+      },
+      where: {
+        user_id: userId,
+      },
+    });
 
-    return result;
+    return transactions.map((transaction) => {
+      return {
+        ...transaction,
+        amount: Number(transaction.amount),
+      };
+    });
   }
 }

@@ -1,19 +1,19 @@
-import { postgresHelper } from "@/db/postgres/client";
+import { prisma } from "@/db/prisma";
 
 interface CreateTransactionRepositoryInput {
   id: string;
   user_id: string;
   amount: string;
   name: string;
-  type: string;
+  type: "EARNING" | "EXPENSE";
   date: string;
 }
 
 interface CreateTransactionRepositoryOutput {
   id: string;
   user_id: string;
-  amount: string;
-  name: number;
+  amount: number;
+  name: string;
   type: string;
   date: Date;
 }
@@ -22,29 +22,28 @@ export class CreateTransactionRepository {
   async execute(
     params: CreateTransactionRepositoryInput,
   ): Promise<CreateTransactionRepositoryOutput> {
-    const result = await postgresHelper<CreateTransactionRepositoryOutput>(
-      `
-        insert into transactions (id, user_id, amount , "name" , "type" , "date"  )
-        values (
-            $1,
-            $2,
-            $3,
-            $4,
-            $5,
-            $6
-        )
-        returning id, user_id, amount , "name" , "type" , "date"    
-    `,
-      [
-        params.id,
-        params.user_id,
-        params.amount,
-        params.name,
-        params.type,
-        params.date,
-      ],
-    );
+    const transaction = await prisma.transaction.create({
+      data: {
+        id: params.id,
+        amount: params.amount,
+        date: new Date(params.date),
+        name: params.name,
+        type: params.type,
+        user_id: params.user_id,
+      },
+      select: {
+        id: true,
+        amount: true,
+        name: true,
+        date: true,
+        type: true,
+        user_id: true,
+      },
+    });
 
-    return result[0];
+    return {
+      ...transaction,
+      amount: Number(transaction.amount),
+    };
   }
 }

@@ -1,4 +1,4 @@
-import { postgresHelper } from "@/db/postgres/client";
+import { prisma } from "@/db/prisma";
 
 interface DeleteTransactionRepositoryOutput {
   id: string;
@@ -10,16 +10,24 @@ interface DeleteTransactionRepositoryOutput {
 }
 
 export class DeleteTransactionRepository {
-  async execute(id: string) {
-    const result = await postgresHelper<DeleteTransactionRepositoryOutput>(
-      `
-        delete from transactions
-        where id = $1
-        returning id, "name", "date", amount, "type", user_id
-    `,
-      [id],
-    );
+  async execute(id: string): Promise<DeleteTransactionRepositoryOutput> {
+    const transaction = await prisma.transaction.delete({
+      select: {
+        id: true,
+        amount: true,
+        name: true,
+        date: true,
+        type: true,
+        user_id: true,
+      },
+      where: {
+        id: id,
+      },
+    });
 
-    return result[0];
+    return {
+      ...transaction,
+      amount: Number(transaction.amount),
+    };
   }
 }

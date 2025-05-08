@@ -1,4 +1,5 @@
 import { postgresHelper } from "@/db/postgres/client";
+import { prisma } from "@/db/prisma";
 
 interface UpdateTransactionRepositoryInput {
   name?: string;
@@ -20,40 +21,45 @@ export class UpdateTransactionRepository {
     id: string,
     updateTransactionParams: UpdateTransactionRepositoryInput,
   ): Promise<UpdateTransactionRepositoryOutput> {
-    const fields: string[] = [];
-    const params: string[] = [];
+    const totalFields = Object.entries(updateTransactionParams).filter(
+      ([_, value]) => value !== undefined,
+    );
 
-    const keys = Object.keys(updateTransactionParams);
-
-    let index = 1;
-    for (const key of keys) {
-      const value =
-        updateTransactionParams[key as keyof UpdateTransactionRepositoryInput];
-
-      if (value !== undefined && value?.trim() !== "") {
-        const fieldString = `${key} = $${index}`;
-        fields.push(fieldString);
-        params.push(value);
-        index++;
-      }
-    }
-
-    if (fields.length === 0) {
+    if (totalFields.length === 0) {
       throw new Error("Fields invalid");
     }
 
-    const fieldsJoin = fields.join(", ");
+    const transaction = await prisma.transaction.update({
+      data: {
+        ...(updateTransactionParams.amount && {
+          amount: updateTransactionParams.amount,
+        }),
+        ...(updateTransactionParams.name && {
+          name: updateTransactionParams.name,
+        }),
+        ...(updateTransactionParams.type && {
+          type:
+            updateTransactionParams.type === "EARNING" ? "EARNING" : "EXPENSE",
+        }),
+        ...(updateTransactionParams.date && {
+          date: new Date(updateTransactionParams.date),
+        }),
+      },
+      select: {
+        id: true,
+        amount: true,
+        name: true,
+        date: true,
+        type: true,
+      },
+      where: {
+        id: id,
+      },
+    });
 
-    const result = await postgresHelper<UpdateTransactionRepositoryOutput>(
-      `
-            update transactions
-            set ${fieldsJoin}
-            where id = $${index}
-            returning id, "name", "date", amount, "type"
-        `,
-      [...params, id],
-    );
-
-    return result[0];
+    return {
+      ...transaction,
+      amount: Number(transaction.amount),
+    };
   }
 }

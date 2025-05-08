@@ -1,4 +1,4 @@
-import { postgresHelper } from "@/db/postgres/client";
+import { prisma } from "@/db/prisma";
 
 interface GetTransactionByIdRepositoryOutput {
   id: string;
@@ -10,22 +10,30 @@ interface GetTransactionByIdRepositoryOutput {
 }
 
 export class GetTransactionByIdRepository {
-  async execute(id: string): Promise<GetTransactionByIdRepositoryOutput> {
-    const result = await postgresHelper<GetTransactionByIdRepositoryOutput>(
-      `
-      select 
-        t.id,
-        t."name",
-        t."date",
-        t.amount,
-        t."type",
-        t.user_id
-      from transactions t 
-      where t.id = $1
-    `,
-      [id],
-    );
+  async execute(
+    id: string,
+  ): Promise<GetTransactionByIdRepositoryOutput | null> {
+    const transaction = await prisma.transaction.findUnique({
+      select: {
+        id: true,
+        amount: true,
+        name: true,
+        date: true,
+        type: true,
+        user_id: true,
+      },
+      where: {
+        id: id,
+      },
+    });
 
-    return result[0];
+    if (!transaction) {
+      return null;
+    }
+
+    return {
+      ...transaction,
+      amount: Number(transaction.amount),
+    };
   }
 }
