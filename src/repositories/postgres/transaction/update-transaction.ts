@@ -1,4 +1,3 @@
-import { postgresHelper } from "@/db/postgres/client";
 import { prisma } from "@/db/prisma";
 
 interface UpdateTransactionRepositoryInput {
