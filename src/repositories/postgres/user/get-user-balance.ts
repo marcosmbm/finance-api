@@ -37,7 +37,7 @@ export class GetUserBalanceRepository {
     const totalExpenses = Number(_totalExpenses ?? 0);
 
     return {
-      balance: totalExpenses - totalErnings,
+      balance: totalErnings - totalExpenses,
       earnings: totalErnings,
       expenses: totalExpenses,
       user_id: userId,
