@@ -9,7 +9,7 @@ interface CreateTransactionUseCaseInput {
   user_id: string;
   amount: string;
   name: string;
-  type: string;
+  type: "EARNING" | "EXPENSE";
   date: Date;
 }
 
