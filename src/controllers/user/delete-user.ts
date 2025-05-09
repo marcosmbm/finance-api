@@ -1,12 +1,9 @@
 import type { DeleteUserUseCase } from "@/use-cases";
 import type { Request } from "express";
 
-import {
-  defaultErrorResponse,
-  invalidUuidResponse,
-  okResponse,
-  checkIfUuidIsValid,
-} from "../helpers";
+import { defaultErrorResponse, okResponse } from "../helpers";
+
+import { userIdSchema } from "@/schema";
 
 export class DeleteUserController {
   private deleteUserUseCase: DeleteUserUseCase;
@@ -19,15 +16,11 @@ export class DeleteUserController {
     try {
       const id = httpRequest.params.id;
 
-      const uuidIsValid = checkIfUuidIsValid(id);
+      const user = userIdSchema.parse({ id });
 
-      if (!uuidIsValid) {
-        return invalidUuidResponse();
-      }
+      const deletedUser = await this.deleteUserUseCase.execute(user.id);
 
-      const user = await this.deleteUserUseCase.execute(id);
-
-      return okResponse(user);
+      return okResponse(deletedUser);
     } catch (error) {
       return defaultErrorResponse(error);
     }

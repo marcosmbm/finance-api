@@ -1,12 +1,8 @@
 import type { GetUserByIdUseCase } from "@/use-cases";
 import type { Request } from "express";
 
-import {
-  defaultErrorResponse,
-  invalidUuidResponse,
-  okResponse,
-  checkIfUuidIsValid,
-} from "../helpers";
+import { userIdSchema } from "@/schema";
+import { defaultErrorResponse, okResponse } from "../helpers";
 
 export class GetUserByIdController {
   private getUserByIdUseCase: GetUserByIdUseCase;
@@ -19,15 +15,11 @@ export class GetUserByIdController {
     try {
       const id = httpRequest.params.id;
 
-      const uuidIsValid = checkIfUuidIsValid(id);
+      const user = userIdSchema.parse({ id });
 
-      if (!uuidIsValid) {
-        return invalidUuidResponse();
-      }
+      const userData = await this.getUserByIdUseCase.execute(user.id);
 
-      const user = await this.getUserByIdUseCase.execute(id);
-
-      return okResponse(user);
+      return okResponse(userData);
     } catch (error) {
       return defaultErrorResponse(error);
     }

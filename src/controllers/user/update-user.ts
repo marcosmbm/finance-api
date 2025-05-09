@@ -1,17 +1,12 @@
 import type { UpdateUserUseCase } from "@/use-cases";
 import type { Request } from "express";
 import {
-  badRequestResponse,
   defaultErrorResponse,
-  okResponse,
-  invalidUuidResponse,
-  invalidEmailResponse,
   invalidParamsResponse,
-  checkIfUuidIsValid,
-  checkIfValueIsEmpty,
-  checkIfEmailIsValid,
-  checkIfHasDisallowedFields,
+  okResponse,
 } from "../helpers";
+
+import { updateUserSchema } from "@/schema";
 
 export class UpdateUserController {
   private updateUserUseCase: UpdateUserUseCase;
@@ -29,45 +24,9 @@ export class UpdateUserController {
         return invalidParamsResponse();
       }
 
-      const uuidIsValid = checkIfUuidIsValid(id);
-      if (!uuidIsValid) {
-        return invalidUuidResponse();
-      }
+      const user = updateUserSchema.parse({ id, ...data });
 
-      const allowedField = ["first_name", "last_name", "email"];
-      const hasFieldsNotAllowed = checkIfHasDisallowedFields(
-        data,
-        allowedField,
-      );
-
-      if (hasFieldsNotAllowed) {
-        return badRequestResponse("Some provided field not allowed");
-      }
-
-      if (data.first_name !== undefined) {
-        if (checkIfValueIsEmpty(data.first_name)) {
-          return badRequestResponse("First name must not be empty");
-        }
-      }
-
-      if (data.last_name !== undefined) {
-        if (checkIfValueIsEmpty(data.last_name)) {
-          return badRequestResponse("Last name must not be empty");
-        }
-      }
-
-      if (data.email) {
-        const emailIsValid = checkIfEmailIsValid(data.email);
-
-        if (!emailIsValid) {
-          return invalidEmailResponse();
-        }
-      }
-
-      const createdUser = await this.updateUserUseCase.execute({
-        id,
-        ...data,
-      });
+      const createdUser = await this.updateUserUseCase.execute(user);
 
       return okResponse(createdUser);
     } catch (error) {

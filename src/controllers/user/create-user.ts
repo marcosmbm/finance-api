@@ -1,15 +1,8 @@
 import type { CreateUserUseCase } from "@/use-cases";
 import type { Request } from "express";
-import {
-  badRequestResponse,
-  checkIfEmailIsValid,
-  checkIfRequiredFieldsIsInvalid,
-  checkIfPasswordIsValid,
-  createdResponse,
-  defaultErrorResponse,
-  invalidEmailResponse,
-  invalidPasswordResponse,
-} from "../helpers";
+import { createdResponse, defaultErrorResponse } from "../helpers";
+
+import { createUserSchema } from "@/schema";
 
 export class CreateUserController {
   private createUserUseCase: CreateUserUseCase;
@@ -22,28 +15,9 @@ export class CreateUserController {
     try {
       const data = httpRequest.body;
 
-      const requiredFields = ["first_name", "last_name", "email", "password"];
-      const fieldsInvalid = checkIfRequiredFieldsIsInvalid(
-        data,
-        requiredFields,
-      );
+      const user = createUserSchema.parse(data);
 
-      if (fieldsInvalid) {
-        return badRequestResponse(fieldsInvalid);
-      }
-
-      const passwordIsValid = checkIfPasswordIsValid(data.password);
-
-      if (!passwordIsValid) {
-        return invalidPasswordResponse();
-      }
-
-      const emailIsValid = checkIfEmailIsValid(data.email);
-      if (!emailIsValid) {
-        return invalidEmailResponse();
-      }
-
-      const createdUser = await this.createUserUseCase.execute(data);
+      const createdUser = await this.createUserUseCase.execute(user);
 
       return createdResponse(createdUser);
     } catch (error) {

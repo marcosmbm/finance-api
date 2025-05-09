@@ -1,12 +1,8 @@
 import type { GetUserBalanceUseCase } from "@/use-cases";
 import type { Request } from "express";
 
-import {
-  checkIfUuidIsValid,
-  defaultErrorResponse,
-  invalidUuidResponse,
-  okResponse,
-} from "../helpers";
+import { userIdSchema } from "@/schema";
+import { defaultErrorResponse, okResponse } from "../helpers";
 
 export class GetUserBalanceController {
   private getUserBalanceUseCase: GetUserBalanceUseCase;
@@ -17,15 +13,11 @@ export class GetUserBalanceController {
 
   async execute(httpRequest: Request) {
     try {
-      const userId = httpRequest.params.id;
+      const id = httpRequest.params.id;
 
-      const uuidIsValid = checkIfUuidIsValid(userId);
+      const user = userIdSchema.parse({ id });
 
-      if (!uuidIsValid) {
-        return invalidUuidResponse();
-      }
-
-      const balance = await this.getUserBalanceUseCase.execute(userId);
+      const balance = await this.getUserBalanceUseCase.execute(user.id);
       return okResponse(balance);
     } catch (error) {
       return defaultErrorResponse(error);

@@ -3,6 +3,7 @@ import {
   TransactionNotFoundError,
   UserNotFoundError,
 } from "@/errors";
+import { ZodError } from "zod";
 
 function response<T = any>(statusCode: number, body: T) {
   return {
@@ -38,6 +39,10 @@ export function okResponse<T = any>(body: T) {
 }
 
 export function defaultErrorResponse(error: unknown) {
+  if (error instanceof ZodError) {
+    return badRequestResponse(error.errors[0].message);
+  }
+
   if (error instanceof EmailAlreadyInUseError) {
     return badRequestResponse(error.message);
   }
