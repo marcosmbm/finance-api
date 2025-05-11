@@ -1,12 +1,8 @@
 import type { DeleteTransactionUseCase } from "@/use-cases";
 import type { Request } from "express";
 
-import {
-  checkIfUuidIsValid,
-  defaultErrorResponse,
-  invalidUuidResponse,
-  okResponse,
-} from "../helpers";
+import { deleteTransactionSchema } from "@/schema";
+import { defaultErrorResponse, okResponse } from "../helpers";
 
 export class DeleteTransactionController {
   private deleteTransactionUseCase: DeleteTransactionUseCase;
@@ -19,14 +15,13 @@ export class DeleteTransactionController {
     try {
       const id = httpRequest.params.id;
 
-      const uuidIsValid = checkIfUuidIsValid(id);
+      const transaction = deleteTransactionSchema.parse({ id });
 
-      if (!uuidIsValid) {
-        return invalidUuidResponse();
-      }
+      const deletedTransaction = await this.deleteTransactionUseCase.execute(
+        transaction.id,
+      );
 
-      const transaction = await this.deleteTransactionUseCase.execute(id);
-      return okResponse(transaction);
+      return okResponse(deletedTransaction);
     } catch (error) {
       return defaultErrorResponse(error);
     }

@@ -4,18 +4,10 @@ import type { Request } from "express";
 import {
   createdResponse,
   defaultErrorResponse,
-  checkIfRequiredFieldsIsInvalid,
-  invalidRequiredFieldsResponse,
-  checkIfUuidIsValid,
-  invalidUuidResponse,
-  checkIfAmountIsCurrency,
-  invalidAmountResponse,
-  invalidTransactionTypeResponse,
-  checkIfTransactionTypeIsValid,
-  checkIfDateIsValid,
-  invalidDateResponse,
   invalidParamsResponse,
 } from "../helpers";
+
+import { createTransactionSchema } from "@/schema";
 
 export class CreateTransactionController {
   private createTransactionUseCase: CreateTransactionUseCase;
@@ -32,48 +24,17 @@ export class CreateTransactionController {
         return invalidParamsResponse();
       }
 
-      const fields = ["user_id", "amount", "name", "type", "date"];
-      const requiredFieldsIsInvalid = checkIfRequiredFieldsIsInvalid(
-        data,
-        fields,
-      );
-
-      if (requiredFieldsIsInvalid) {
-        return invalidRequiredFieldsResponse(requiredFieldsIsInvalid);
-      }
-
-      const userIdIsValid = checkIfUuidIsValid(data.user_id);
-
-      if (!userIdIsValid) {
-        return invalidUuidResponse();
-      }
-
-      const amount = data.amount.toString();
-      const amountIsValid = checkIfAmountIsCurrency(amount);
-      if (!amountIsValid) {
-        return invalidAmountResponse();
-      }
-
-      const type = data.type.trim().toUpperCase();
-      const transactionTypeIsValid = checkIfTransactionTypeIsValid(type);
-      if (!transactionTypeIsValid) {
-        return invalidTransactionTypeResponse();
-      }
-
-      const date = data.date.toString();
-      const dateIsValid = checkIfDateIsValid(date);
-
-      if (!dateIsValid) {
-        return invalidDateResponse();
-      }
-
-      const transaction = await this.createTransactionUseCase.execute({
+      const transaction = createTransactionSchema.parse({
         ...data,
-        amount,
-        date,
-        type,
+        type: String(data.type).toUpperCase(),
       });
-      return createdResponse(transaction);
+
+      const createdTransaction = await this.createTransactionUseCase.execute({
+        ...transaction,
+        amount: String(transaction.amount),
+        date: new Date(transaction.date),
+      });
+      return createdResponse(createdTransaction);
     } catch (error) {
       return defaultErrorResponse(error);
     }

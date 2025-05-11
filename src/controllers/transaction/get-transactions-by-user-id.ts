@@ -1,13 +1,9 @@
 import type { GetTransactionsByUserIdUseCase } from "@/use-cases";
 import type { Request } from "express";
 
-import {
-  defaultErrorResponse,
-  okResponse,
-  checkIfUuidIsValid,
-  invalidUuidResponse,
-  invalidRequiredFieldsResponse,
-} from "../helpers";
+import { defaultErrorResponse, okResponse } from "../helpers";
+
+import { getTransactionByUserSchema } from "@/schema";
 
 export class GetTransactionsByUserIdController {
   private getTransactionsByUserIdUseCase: GetTransactionsByUserIdUseCase;
@@ -20,17 +16,11 @@ export class GetTransactionsByUserIdController {
     try {
       const userId = httpRequest.query.user_id as string;
 
-      if (!userId) {
-        return invalidRequiredFieldsResponse("user_id");
-      }
+      const transaction = getTransactionByUserSchema.parse({ user_id: userId });
 
-      const uuidIsValid = checkIfUuidIsValid(userId);
-      if (!uuidIsValid) {
-        return invalidUuidResponse();
-      }
-
-      const transactions =
-        await this.getTransactionsByUserIdUseCase.execute(userId);
+      const transactions = await this.getTransactionsByUserIdUseCase.execute(
+        transaction.user_id,
+      );
 
       return okResponse(transactions);
     } catch (error) {
