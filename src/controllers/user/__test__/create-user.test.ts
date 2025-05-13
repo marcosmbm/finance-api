@@ -1,4 +1,4 @@
-import { describe, it, expect } from "@jest/globals";
+import { describe, it, expect, jest } from "@jest/globals";
 import { CreateUserController } from "../create-user";
 
 interface CreateUserUser {
@@ -135,5 +135,32 @@ describe("Create user controller test", () => {
 
     //expect
     expect(result.statusCode).toBe(400);
+  });
+
+  it("should call CreateUserUseCase with correct params", async () => {
+    //arrange
+    const createUserUseCase = new CreateUserUseCaseStub();
+    const createUserController = new CreateUserController(
+      createUserUseCase as any,
+    );
+
+    const httpRequest = {
+      body: {
+        first_name: "teste",
+        last_name: "usuario",
+        email: "teste@email.com",
+        password: "12345678",
+      },
+    };
+
+    const excuteSpy = jest.spyOn(createUserUseCase, "execute");
+
+    //act
+    const result = await createUserController.execute(httpRequest as any);
+
+    //expect
+    expect(result.statusCode).toBe(201);
+    expect(excuteSpy).toHaveBeenCalledWith(httpRequest.body);
+    expect(excuteSpy).toHaveBeenCalledTimes(1);
   });
 });
