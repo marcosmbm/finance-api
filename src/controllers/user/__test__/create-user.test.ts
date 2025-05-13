@@ -1,5 +1,6 @@
 import { describe, it, expect, jest } from "@jest/globals";
 import { CreateUserController } from "../create-user";
+import { faker } from "@faker-js/faker";
 
 interface CreateUserUser {
   first_name: string;
@@ -29,10 +30,10 @@ describe("Create user controller test", () => {
 
     const httpRequest = {
       body: {
-        first_name: "teste",
-        last_name: "usuario",
-        email: "teste@email.com",
-        password: "12345678",
+        first_name: faker.person.firstName(),
+        last_name: faker.person.lastName(),
+        email: faker.internet.email(),
+        password: faker.internet.password({ length: 7 }),
       },
     };
 
@@ -55,9 +56,9 @@ describe("Create user controller test", () => {
     const httpRequest = {
       body: {
         first_name: "",
-        last_name: "usuario",
-        email: "teste@email.com",
-        password: "12345678",
+        last_name: faker.person.lastName(),
+        email: faker.internet.email(),
+        password: faker.internet.password({ length: 7 }),
       },
     };
 
@@ -77,10 +78,10 @@ describe("Create user controller test", () => {
 
     const httpRequest = {
       body: {
-        first_name: "teste",
+        first_name: faker.person.firstName(),
         last_name: "",
-        email: "teste@email.com",
-        password: "12345678",
+        email: faker.internet.email(),
+        password: faker.internet.password({ length: 7 }),
       },
     };
 
@@ -100,10 +101,10 @@ describe("Create user controller test", () => {
 
     const httpRequest = {
       body: {
-        first_name: "teste",
-        last_name: "usuario",
+        first_name: faker.person.firstName(),
+        last_name: faker.person.lastName(),
         email: "",
-        password: "12345678",
+        password: faker.internet.password({ length: 7 }),
       },
     };
 
@@ -123,9 +124,9 @@ describe("Create user controller test", () => {
 
     const httpRequest = {
       body: {
-        first_name: "teste",
-        last_name: "usuario",
-        email: "teste@email.com",
+        first_name: faker.person.firstName(),
+        last_name: faker.person.lastName(),
+        email: faker.internet.email(),
         password: "",
       },
     };
@@ -146,10 +147,10 @@ describe("Create user controller test", () => {
 
     const httpRequest = {
       body: {
-        first_name: "teste",
-        last_name: "usuario",
-        email: "teste@email.com",
-        password: "12345678",
+        first_name: faker.person.firstName(),
+        last_name: faker.person.lastName(),
+        email: faker.internet.email(),
+        password: faker.internet.password({ length: 7 }),
       },
     };
 
