@@ -1,6 +1,7 @@
 import { describe, it, expect, jest } from "@jest/globals";
 import { CreateUserController } from "../create-user";
 import { faker } from "@faker-js/faker";
+import { EmailAlreadyInUseError, UserNotFoundError } from "@/errors";
 
 interface CreateUserUser {
   first_name: string;
@@ -163,5 +164,113 @@ describe("Create user controller test", () => {
     expect(result.statusCode).toBe(201);
     expect(excuteSpy).toHaveBeenCalledWith(httpRequest.body);
     expect(excuteSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it("should return 500 if CreateUserUseCase throws", async () => {
+    //arrange
+    const createUserUseCase = new CreateUserUseCaseStub();
+    const createUserController = new CreateUserController(
+      createUserUseCase as any,
+    );
+
+    const httpRequest = {
+      body: {
+        first_name: faker.person.firstName(),
+        last_name: faker.person.lastName(),
+        email: faker.internet.email(),
+        password: faker.internet.password({ length: 7 }),
+      },
+    };
+
+    jest.spyOn(createUserUseCase, "execute").mockImplementationOnce(() => {
+      throw "erro interno";
+    });
+
+    //act
+    const result = await createUserController.execute(httpRequest as any);
+
+    //expect
+    expect(result.statusCode).toBe(500);
+  });
+
+  it("should return 400 if CreateUserUseCase throws EmailsAlreadyInUseError", async () => {
+    //arrange
+    const createUserUseCase = new CreateUserUseCaseStub();
+    const createUserController = new CreateUserController(
+      createUserUseCase as any,
+    );
+
+    const httpRequest = {
+      body: {
+        first_name: faker.person.firstName(),
+        last_name: faker.person.lastName(),
+        email: faker.internet.email(),
+        password: faker.internet.password({ length: 7 }),
+      },
+    };
+
+    jest.spyOn(createUserUseCase, "execute").mockImplementationOnce(() => {
+      throw new EmailAlreadyInUseError(httpRequest.body.email);
+    });
+
+    //act
+    const result = await createUserController.execute(httpRequest as any);
+
+    //expect
+    expect(result.statusCode).toBe(400);
+  });
+
+  it("should return 404 if CreateUserUseCase throws UserNotFoundError", async () => {
+    //arrange
+    const createUserUseCase = new CreateUserUseCaseStub();
+    const createUserController = new CreateUserController(
+      createUserUseCase as any,
+    );
+
+    const httpRequest = {
+      body: {
+        first_name: faker.person.firstName(),
+        last_name: faker.person.lastName(),
+        email: faker.internet.email(),
+        password: faker.internet.password({ length: 7 }),
+      },
+    };
+
+    jest.spyOn(createUserUseCase, "execute").mockImplementationOnce(() => {
+      throw new UserNotFoundError("1");
+    });
+
+    //act
+    const result = await createUserController.execute(httpRequest as any);
+
+    //expect
+    expect(result.statusCode).toBe(404);
+  });
+
+  it("should return 400 if CreateUserUseCase throw new Error", async () => {
+    //arrange
+    const createUserUseCase = new CreateUserUseCaseStub();
+    const createUserController = new CreateUserController(
+      createUserUseCase as any,
+    );
+
+    const httpRequest = {
+      body: {
+        first_name: faker.person.firstName(),
+        last_name: faker.person.lastName(),
+        email: faker.internet.email(),
+        password: faker.internet.password({ length: 7 }),
+      },
+    };
+
+    jest.spyOn(createUserUseCase, "execute").mockImplementationOnce(() => {
+      throw new Error("teste");
+    });
+
+    //act
+    const result = await createUserController.execute(httpRequest as any);
+
+    //expect
+    expect(result.statusCode).toBe(400);
   });
 });
