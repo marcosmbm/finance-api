@@ -22,12 +22,17 @@ describe("Create user controller test", () => {
     }
   }
 
-  it("should return 201 when a creating a user successfully", async () => {
-    //arrange
+  function makeSut() {
     const createUserUseCase = new CreateUserUseCaseStub();
     const createUserController = new CreateUserController(
       createUserUseCase as any,
     );
+
+    return { createUserController, createUserUseCase };
+  }
+
+  it("should return 201 when a creating a user successfully", async () => {
+    const { createUserController } = makeSut();
 
     const httpRequest = {
       body: {
@@ -49,10 +54,7 @@ describe("Create user controller test", () => {
 
   it("should return 400 if first_name is not provider", async () => {
     //arrange
-    const createUserUseCase = new CreateUserUseCaseStub();
-    const createUserController = new CreateUserController(
-      createUserUseCase as any,
-    );
+    const { createUserController } = makeSut();
 
     const httpRequest = {
       body: {
@@ -72,10 +74,7 @@ describe("Create user controller test", () => {
 
   it("should return 400 if last_name is not provider", async () => {
     //arrange
-    const createUserUseCase = new CreateUserUseCaseStub();
-    const createUserController = new CreateUserController(
-      createUserUseCase as any,
-    );
+    const { createUserController } = makeSut();
 
     const httpRequest = {
       body: {
@@ -95,10 +94,7 @@ describe("Create user controller test", () => {
 
   it("should return 400 if email is not provider", async () => {
     //arrange
-    const createUserUseCase = new CreateUserUseCaseStub();
-    const createUserController = new CreateUserController(
-      createUserUseCase as any,
-    );
+    const { createUserController } = makeSut();
 
     const httpRequest = {
       body: {
@@ -118,10 +114,7 @@ describe("Create user controller test", () => {
 
   it("should return 400 if password is not provider", async () => {
     //arrange
-    const createUserUseCase = new CreateUserUseCaseStub();
-    const createUserController = new CreateUserController(
-      createUserUseCase as any,
-    );
+    const { createUserController } = makeSut();
 
     const httpRequest = {
       body: {
@@ -141,10 +134,7 @@ describe("Create user controller test", () => {
 
   it("should call CreateUserUseCase with correct params", async () => {
     //arrange
-    const createUserUseCase = new CreateUserUseCaseStub();
-    const createUserController = new CreateUserController(
-      createUserUseCase as any,
-    );
+    const { createUserController, createUserUseCase } = makeSut();
 
     const httpRequest = {
       body: {
@@ -168,10 +158,7 @@ describe("Create user controller test", () => {
 
   it("should return 500 if CreateUserUseCase throws", async () => {
     //arrange
-    const createUserUseCase = new CreateUserUseCaseStub();
-    const createUserController = new CreateUserController(
-      createUserUseCase as any,
-    );
+    const { createUserController, createUserUseCase } = makeSut();
 
     const httpRequest = {
       body: {
@@ -195,10 +182,7 @@ describe("Create user controller test", () => {
 
   it("should return 400 if CreateUserUseCase throws EmailsAlreadyInUseError", async () => {
     //arrange
-    const createUserUseCase = new CreateUserUseCaseStub();
-    const createUserController = new CreateUserController(
-      createUserUseCase as any,
-    );
+    const { createUserController, createUserUseCase } = makeSut();
 
     const httpRequest = {
       body: {
@@ -222,10 +206,7 @@ describe("Create user controller test", () => {
 
   it("should return 404 if CreateUserUseCase throws UserNotFoundError", async () => {
     //arrange
-    const createUserUseCase = new CreateUserUseCaseStub();
-    const createUserController = new CreateUserController(
-      createUserUseCase as any,
-    );
+    const { createUserController, createUserUseCase } = makeSut();
 
     const httpRequest = {
       body: {
@@ -249,10 +230,7 @@ describe("Create user controller test", () => {
 
   it("should return 400 if CreateUserUseCase throw new Error", async () => {
     //arrange
-    const createUserUseCase = new CreateUserUseCaseStub();
-    const createUserController = new CreateUserController(
-      createUserUseCase as any,
-    );
+    const { createUserController, createUserUseCase } = makeSut();
 
     const httpRequest = {
       body: {
