@@ -5,7 +5,7 @@ import type {
 } from "@/repositories";
 import { v4 as uuidv4 } from "uuid";
 
-interface CreateTransactionUseCaseInput {
+export interface CreateTransactionUseCaseInput {
   user_id: string;
   amount: string;
   name: string;
