@@ -21,7 +21,6 @@ export class CreateUserController {
 
       return createdResponse(createdUser);
     } catch (error) {
-      console.error(error);
       return defaultErrorResponse(error);
     }
   }

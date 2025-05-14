@@ -30,7 +30,6 @@ export class UpdateUserController {
 
       return okResponse(createdUser);
     } catch (error) {
-      console.error(error);
       return defaultErrorResponse(error);
     }
   }
