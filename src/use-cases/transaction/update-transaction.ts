@@ -4,7 +4,7 @@ import type {
   GetTransactionByIdRepository,
 } from "@/repositories";
 
-interface UpdateTransactionUseCaseInput {
+export interface UpdateTransactionUseCaseInput {
   id: string;
   name?: string;
   date?: string;
