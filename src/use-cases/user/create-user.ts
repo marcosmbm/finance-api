@@ -3,8 +3,9 @@ import type {
   CreateUserRepository,
   GetUserByEmailRepository,
 } from "@/repositories";
-import bcrypt from "bcryptjs";
+
 import { v4 as uuidv4 } from "uuid";
+import type { HasherAdapter } from "@/adapters";
 
 interface CreateUserUseCaseInput {
   first_name: string;
@@ -16,13 +17,16 @@ interface CreateUserUseCaseInput {
 export class CreateUserUseCase {
   private createUserRepository: CreateUserRepository;
   private getUserByEmailRepository: GetUserByEmailRepository;
+  private hasherAdapter: HasherAdapter;
 
   constructor(
     createUserRepository: CreateUserRepository,
     getUserByEmailRepository: GetUserByEmailRepository,
+    hasherAdapter: HasherAdapter,
   ) {
     this.createUserRepository = createUserRepository;
     this.getUserByEmailRepository = getUserByEmailRepository;
+    this.hasherAdapter = hasherAdapter;
   }
 
   async execute(createUserParams: CreateUserUseCaseInput) {
@@ -36,11 +40,8 @@ export class CreateUserUseCase {
 
     const userId = uuidv4();
 
-    const saltRounds = Number(process.env.BCRYPT_SALT_ROUNDS);
-
-    const hashedPassword = bcrypt.hashSync(
+    const hashedPassword = await this.hasherAdapter.hash(
       createUserParams.password,
-      saltRounds,
     );
 
     return await this.createUserRepository.execute({

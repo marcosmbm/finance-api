@@ -23,13 +23,19 @@ import {
   UpdateUserRepository,
 } from "@/repositories";
 
+import { HasherAdapter } from "@/adapters";
+
+import { env } from "@/config/env";
+
 export function makeCreateUserController() {
   const createUserRepository = new CreateUserRepository();
   const getUserByEmailRepository = new GetUserByEmailRepository();
+  const hasherAdapter = new HasherAdapter(env.saltRounds);
 
   const createUserUseCase = new CreateUserUseCase(
     createUserRepository,
     getUserByEmailRepository,
+    hasherAdapter,
   );
 
   return new CreateUserController(createUserUseCase);
