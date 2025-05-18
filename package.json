@@ -40,9 +40,7 @@
     "typescript": "^5.8.3"
   },
   "commitlint": {
-    "extends": [
-      "@commitlint/config-conventional"
-    ]
+    "extends": ["@commitlint/config-conventional"]
   },
   "dependencies": {
     "@prisma/client": "^6.7.0",
