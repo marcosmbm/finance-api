@@ -4,8 +4,7 @@ import type {
   GetUserByEmailRepository,
 } from "@/repositories";
 
-import { v4 as uuidv4 } from "uuid";
-import type { HasherAdapter } from "@/adapters";
+import type { HasherAdapter, IdGeneratorAdapter } from "@/adapters";
 
 interface CreateUserUseCaseInput {
   first_name: string;
@@ -18,15 +17,18 @@ export class CreateUserUseCase {
   private createUserRepository: CreateUserRepository;
   private getUserByEmailRepository: GetUserByEmailRepository;
   private hasherAdapter: HasherAdapter;
+  private idGeneratorAdapter: IdGeneratorAdapter;
 
   constructor(
     createUserRepository: CreateUserRepository,
     getUserByEmailRepository: GetUserByEmailRepository,
     hasherAdapter: HasherAdapter,
+    idGeneratorAdapter: IdGeneratorAdapter,
   ) {
     this.createUserRepository = createUserRepository;
     this.getUserByEmailRepository = getUserByEmailRepository;
     this.hasherAdapter = hasherAdapter;
+    this.idGeneratorAdapter = idGeneratorAdapter;
   }
 
   async execute(createUserParams: CreateUserUseCaseInput) {
@@ -38,7 +40,7 @@ export class CreateUserUseCase {
       throw new EmailAlreadyInUseError(createUserParams.email);
     }
 
-    const userId = uuidv4();
+    const userId = this.idGeneratorAdapter.execute();
 
     const hashedPassword = await this.hasherAdapter.hash(
       createUserParams.password,
