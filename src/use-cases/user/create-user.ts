@@ -6,7 +6,7 @@ import type {
 
 import type { HasherAdapter, IdGeneratorAdapter } from "@/adapters";
 
-interface CreateUserUseCaseInput {
+export interface CreateUserUseCaseInput {
   first_name: string;
   last_name: string;
   email: string;
