@@ -3,7 +3,8 @@ import type {
   CreateTransactionRepository,
   GetUserByIdRepository,
 } from "@/repositories";
-import { v4 as uuidv4 } from "uuid";
+
+import type { IdGeneratorAdapter } from "@/adapters";
 
 export interface CreateTransactionUseCaseInput {
   user_id: string;
@@ -16,13 +17,16 @@ export interface CreateTransactionUseCaseInput {
 export class CreateTransactionUseCase {
   private createTransactionRepository: CreateTransactionRepository;
   private getUserByIdRepository: GetUserByIdRepository;
+  private idGeneratorAdapter: IdGeneratorAdapter;
 
   constructor(
     createTransactionRepository: CreateTransactionRepository,
     getUserByIdRepository: GetUserByIdRepository,
+    idGeneratorAdapter: IdGeneratorAdapter,
   ) {
     this.createTransactionRepository = createTransactionRepository;
     this.getUserByIdRepository = getUserByIdRepository;
+    this.idGeneratorAdapter = idGeneratorAdapter;
   }
 
   async execute(params: CreateTransactionUseCaseInput) {
@@ -32,10 +36,12 @@ export class CreateTransactionUseCase {
       throw new UserNotFoundError(params.user_id);
     }
 
+    const transactionId = this.idGeneratorAdapter.execute();
+
     return await this.createTransactionRepository.execute({
       amount: params.amount.toString(),
       date: params.date.toString(),
-      id: uuidv4(),
+      id: transactionId,
       name: params.name,
       type: params.type,
       user_id: params.user_id,

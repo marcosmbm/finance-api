@@ -1,3 +1,5 @@
+import { IdGeneratorAdapter } from "@/adapters";
+
 import {
   CreateTransactionController,
   DeleteTransactionController,
@@ -24,10 +26,12 @@ import {
 export function makeCreateTransactionController() {
   const createTransactionRepository = new CreateTransactionRepository();
   const getUserByIdRepository = new GetUserByIdRepository();
+  const idGeneratorAdapter = new IdGeneratorAdapter();
 
   const createTransactionUseCase = new CreateTransactionUseCase(
     createTransactionRepository,
     getUserByIdRepository,
+    idGeneratorAdapter,
   );
 
   return new CreateTransactionController(createTransactionUseCase);
