@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { checkIfPasswordIsValid } from "@/controllers/helpers";
 
 export const createUserSchema = z.object({
   first_name: z.string().trim().min(1, { message: "First name is required" }),
@@ -11,7 +12,12 @@ export const createUserSchema = z.object({
   password: z
     .string()
     .trim()
-    .min(6, { message: "Password must have at least 6 characters." }),
+    .refine(
+      (password) => {
+        return checkIfPasswordIsValid(password);
+      },
+      { message: "Password must have at least 6 characters." },
+    ),
 });
 
 export const updateUserSchema = z

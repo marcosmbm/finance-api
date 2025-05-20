@@ -1,5 +1,9 @@
 import { z } from "zod";
-import validator from "validator";
+
+import {
+  checkIfAmountIsCurrency,
+  checkIfDateIsValid,
+} from "@/controllers/helpers";
 
 export const createTransactionSchema = z
   .object({
@@ -14,9 +18,7 @@ export const createTransactionSchema = z
     }),
     date: z.coerce.string().refine(
       (date) => {
-        return validator.isDate(date.toString(), {
-          format: "YYYY-MM-DD",
-        });
+        return checkIfDateIsValid(date.toString());
       },
       {
         message:
@@ -28,11 +30,7 @@ export const createTransactionSchema = z
       .min(1, { message: "Amount is required" })
       .refine(
         (value) => {
-          return validator.isCurrency(String(value), {
-            digits_after_decimal: [2],
-            allow_decimal: true,
-            decimal_separator: ".",
-          });
+          return checkIfAmountIsCurrency(String(value));
         },
         { message: "The amount must be a valid currency" },
       ),
@@ -54,9 +52,7 @@ export const updateTransactionSchema = z
       .string()
       .refine(
         (date) => {
-          return validator.isDate(date.toString(), {
-            format: "YYYY-MM-DD",
-          });
+          return checkIfDateIsValid(date.toString());
         },
         {
           message:
@@ -69,11 +65,7 @@ export const updateTransactionSchema = z
       .min(1, { message: "Amount is required" })
       .refine(
         (value) => {
-          return validator.isCurrency(String(value), {
-            digits_after_decimal: [2],
-            allow_decimal: true,
-            decimal_separator: ".",
-          });
+          return checkIfAmountIsCurrency(String(value));
         },
         { message: "The amount must be a valid currency" },
       )
