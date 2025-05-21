@@ -1,6 +1,6 @@
 import { prisma } from "@/db/prisma";
 
-interface DeleteTransactionRepositoryOutput {
+export interface DeleteTransactionRepositoryOutput {
   id: string;
   name: string;
   date: Date;

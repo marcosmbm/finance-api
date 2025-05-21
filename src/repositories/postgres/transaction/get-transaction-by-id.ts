@@ -1,6 +1,6 @@
 import { prisma } from "@/db/prisma";
 
-interface GetTransactionByIdRepositoryOutput {
+export interface GetTransactionByIdRepositoryOutput {
   id: string;
   name: string;
   date: Date;

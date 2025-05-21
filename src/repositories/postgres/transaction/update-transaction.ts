@@ -1,13 +1,12 @@
 import { prisma } from "@/db/prisma";
 
-interface UpdateTransactionRepositoryInput {
+export interface UpdateTransactionRepositoryInput {
   name?: string;
   date?: string;
   amount?: string;
   type?: string;
 }
-
-interface UpdateTransactionRepositoryOutput {
+export interface UpdateTransactionRepositoryOutput {
   id: string;
   name: string;
   date: Date;

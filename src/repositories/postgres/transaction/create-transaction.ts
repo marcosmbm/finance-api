@@ -1,6 +1,6 @@
 import { prisma } from "@/db/prisma";
 
-interface CreateTransactionRepositoryInput {
+export interface CreateTransactionRepositoryInput {
   id: string;
   user_id: string;
   amount: string;
@@ -9,7 +9,7 @@ interface CreateTransactionRepositoryInput {
   date: string;
 }
 
-interface CreateTransactionRepositoryOutput {
+export interface CreateTransactionRepositoryOutput {
   id: string;
   user_id: string;
   amount: number;
