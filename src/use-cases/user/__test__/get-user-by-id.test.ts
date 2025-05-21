@@ -1,20 +1,9 @@
 import { faker } from "@faker-js/faker/.";
 import { describe, expect, it, jest } from "@jest/globals";
-import { GetUserBalanceUseCase } from "../get-user-balance";
 import { UserNotFoundError } from "@/errors";
+import { GetUserByIdUseCase } from "../get-user-by-id";
 
-describe("Get user balance use case test", () => {
-  class GetUserBalanceRepositoryStub {
-    async execute(userId: string) {
-      return {
-        balance: Number(faker.finance.amount()),
-        earnings: Number(faker.finance.amount()),
-        expenses: Number(faker.finance.amount()),
-        user_id: userId,
-      };
-    }
-  }
-
+describe("Get user by id use case test", () => {
   class GetUserByIdRepositoryStub {
     async execute(id: string) {
       return {
@@ -27,20 +16,16 @@ describe("Get user balance use case test", () => {
   }
 
   function makeSut() {
-    const getUserBalanceRepository = new GetUserBalanceRepositoryStub();
     const getUserByIdRepository = new GetUserByIdRepositoryStub();
 
-    const sut = new GetUserBalanceUseCase(
-      getUserBalanceRepository,
-      getUserByIdRepository,
-    );
+    const sut = new GetUserByIdUseCase(getUserByIdRepository);
 
-    return { sut, getUserBalanceRepository, getUserByIdRepository };
+    return { sut, getUserByIdRepository };
   }
 
   const userId = faker.string.uuid();
 
-  it("should correctly return the user balance", async () => {
+  it("should return a user when searching by id", async () => {
     //arrange
     const { sut } = makeSut();
 
