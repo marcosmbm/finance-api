@@ -6,6 +6,7 @@ import { faker } from "@faker-js/faker/.";
 import { describe, expect, it, jest } from "@jest/globals";
 import { DeleteTransactionUseCase } from "../delete-transaction";
 import { TransactionNotFoundError } from "@/errors";
+import { fixtureTransaction } from "@/tests";
 
 describe("Delete transaction test", () => {
   class DeleteTransactionRepositoryStub {
@@ -25,14 +26,7 @@ describe("Delete transaction test", () => {
     async execute(
       id: string,
     ): Promise<GetTransactionByIdRepositoryOutput | null> {
-      return {
-        amount: Number(faker.finance.amount()),
-        date: faker.date.anytime(),
-        name: faker.commerce.productName(),
-        type: "EARNING",
-        user_id: faker.string.uuid(),
-        id: id,
-      };
+      return fixtureTransaction;
     }
   }
 

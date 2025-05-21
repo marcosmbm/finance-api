@@ -3,6 +3,8 @@ import { CreateUserUseCase, type CreateUserUseCaseInput } from "../create-user";
 import { faker } from "@faker-js/faker/.";
 import { EmailAlreadyInUseError } from "@/errors";
 
+import { fixtureUser } from "@/tests";
+
 describe("Create user use case test", () => {
   class CreateUserRepository {
     async execute(user: CreateUserUseCaseInput) {
@@ -53,12 +55,7 @@ describe("Create user use case test", () => {
     };
   }
 
-  const user: CreateUserUseCaseInput = {
-    email: faker.internet.email(),
-    first_name: faker.person.firstName(),
-    last_name: faker.person.lastName(),
-    password: faker.internet.password(),
-  };
+  const user: CreateUserUseCaseInput = fixtureUser;
 
   it("should successfully create a user", async () => {
     //arrange

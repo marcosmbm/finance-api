@@ -2,6 +2,7 @@ import { faker } from "@faker-js/faker/.";
 import { describe, expect, it, jest } from "@jest/globals";
 import { GetUserBalanceUseCase } from "../get-user-balance";
 import { UserNotFoundError } from "@/errors";
+import { fixtureUser } from "@/tests";
 
 describe("Get user balance use case test", () => {
   class GetUserBalanceRepositoryStub {
@@ -17,12 +18,7 @@ describe("Get user balance use case test", () => {
 
   class GetUserByIdRepositoryStub {
     async execute(id: string) {
-      return {
-        id,
-        first_name: faker.person.firstName(),
-        last_name: faker.person.lastName(),
-        email: faker.internet.email(),
-      };
+      return fixtureUser;
     }
   }
 

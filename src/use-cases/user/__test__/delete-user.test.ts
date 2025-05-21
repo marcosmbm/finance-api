@@ -1,28 +1,18 @@
-import { faker } from "@faker-js/faker/.";
+import { UserNotFoundError } from "@/errors";
+import { fixtureUser } from "@/tests";
 import { describe, expect, it, jest } from "@jest/globals";
 import { DeleteUserUseCase } from "../delete-user";
-import { UserNotFoundError } from "@/errors";
 
 describe("Delete user use case test", () => {
   class DeleteUserRepositoryStub {
     async execute(id: string) {
-      return {
-        id,
-        first_name: faker.person.firstName(),
-        last_name: faker.person.lastName(),
-        email: faker.internet.email(),
-      };
+      return fixtureUser;
     }
   }
 
   class GetUserByIdRepositoryStub {
     async execute(id: string) {
-      return {
-        id,
-        first_name: faker.person.firstName(),
-        last_name: faker.person.lastName(),
-        email: faker.internet.email(),
-      };
+      return fixtureUser;
     }
   }
 
@@ -37,7 +27,7 @@ describe("Delete user use case test", () => {
     return { sut, deleteUserRepository, getUserByIdRepository };
   }
 
-  const userId = faker.string.uuid();
+  const userId = fixtureUser.id;
 
   it("should successfully a delete user", async () => {
     //arrange

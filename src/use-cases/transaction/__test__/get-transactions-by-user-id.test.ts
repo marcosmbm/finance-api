@@ -4,32 +4,20 @@ import { describe, expect, it, jest } from "@jest/globals";
 import { DeleteTransactionUseCase } from "../delete-transaction";
 import { UserNotFoundError } from "@/errors";
 import { GetTransactionsByUserIdUseCase } from "../get-transactions-by-user-id";
+import { fixtureTransaction, fixtureUser } from "@/tests";
 
 describe("Get transactions by user id test", () => {
   class GetTransactionsByUserIdRepositoryStub {
     async execute(
       id: string,
     ): Promise<GetTransactionsByUserIdRepositoryOutput[]> {
-      return [
-        {
-          amount: Number(faker.finance.amount()),
-          date: faker.date.anytime(),
-          name: faker.commerce.productName(),
-          type: "EARNING",
-          id: id,
-        },
-      ];
+      return [fixtureTransaction];
     }
   }
 
   class GetUserByIdRepositoryStub {
     async execute(id: string) {
-      return {
-        id,
-        first_name: faker.person.firstName(),
-        last_name: faker.person.lastName(),
-        email: faker.internet.email(),
-      };
+      return fixtureUser;
     }
   }
 

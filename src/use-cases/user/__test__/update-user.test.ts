@@ -6,6 +6,7 @@ import { faker } from "@faker-js/faker/.";
 import { describe, expect, it, jest } from "@jest/globals";
 import { UpdateUserUseCase, type UpdateUserUseCaseInput } from "../update-user";
 import { EmailAlreadyInUseError, UserNotFoundError } from "@/errors";
+import { fixtureUser } from "@/tests";
 
 describe("Update user use case test", () => {
   class UpdateUserRepositorySub {
@@ -13,12 +14,7 @@ describe("Update user use case test", () => {
       id: string,
       params: UpdateUserRepositoryInput,
     ): Promise<UpdateUserRepositoryOutput> {
-      return {
-        id: id,
-        first_name: params.first_name as string,
-        last_name: params.last_name as string,
-        email: params.email as string,
-      };
+      return fixtureUser;
     }
   }
 
@@ -36,12 +32,7 @@ describe("Update user use case test", () => {
 
   class GetUserByIdRepositorySub {
     async execute(id: string) {
-      return {
-        id,
-        first_name: faker.person.firstName(),
-        last_name: faker.person.lastName(),
-        email: faker.internet.email(),
-      };
+      return fixtureUser;
     }
   }
 
@@ -64,12 +55,7 @@ describe("Update user use case test", () => {
     };
   }
 
-  const user: UpdateUserUseCaseInput = {
-    id: faker.string.uuid(),
-    email: faker.internet.email(),
-    first_name: faker.person.firstName(),
-    last_name: faker.person.lastName(),
-  };
+  const user: UpdateUserUseCaseInput = fixtureUser;
 
   it("should successfully update a user", async () => {
     //arrange
@@ -99,13 +85,9 @@ describe("Update user use case test", () => {
   it("should successfully update a user if the returned user id is equal to the given user id", async () => {
     //arrange
     const { sut, getUserByEmailRepository } = makeSut();
-    jest.spyOn(getUserByEmailRepository, "execute").mockResolvedValue({
-      id: user.id,
-      first_name: faker.person.firstName(),
-      last_name: faker.person.lastName(),
-      email: user.email as string,
-      password: faker.internet.password(),
-    });
+    jest
+      .spyOn(getUserByEmailRepository, "execute")
+      .mockResolvedValue(user as any);
 
     //act
     const result = sut.execute(user);
@@ -119,11 +101,8 @@ describe("Update user use case test", () => {
     const { sut, getUserByEmailRepository } = makeSut();
 
     jest.spyOn(getUserByEmailRepository, "execute").mockResolvedValue({
-      email: user.email as string,
-      first_name: faker.person.firstName(),
-      last_name: faker.person.lastName(),
+      ...(user as any),
       id: faker.string.uuid(),
-      password: faker.internet.password(),
     });
 
     //act

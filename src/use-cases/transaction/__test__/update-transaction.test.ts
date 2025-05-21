@@ -10,6 +10,7 @@ import type {
   UpdateTransactionRepositoryOutput,
 } from "@/repositories";
 import { TransactionNotFoundError } from "@/errors";
+import { fixtureTransaction } from "@/tests";
 
 describe("Update transaction use case test", () => {
   class GetTransactionByIdRepositoryStub {
@@ -32,22 +33,15 @@ describe("Update transaction use case test", () => {
       id: string,
       params: UpdateTransactionRepositoryInput,
     ): Promise<UpdateTransactionRepositoryOutput> {
-      return {
-        amount: Number(faker.finance.amount()),
-        date: faker.date.anytime(),
-        name: faker.commerce.productName(),
-        type: "EARNING",
-        id: faker.string.uuid(),
-      };
+      return fixtureTransaction;
     }
   }
 
   const transaction: UpdateTransactionUseCaseInput = {
-    id: faker.string.uuid(),
-    amount: faker.finance.amount(),
-    date: faker.date.anytime().toString(),
-    name: faker.commerce.productName(),
+    ...fixtureTransaction,
     type: "EARNING",
+    amount: fixtureTransaction.amount.toString(),
+    date: fixtureTransaction.date.toString(),
   };
 
   function makeSut() {

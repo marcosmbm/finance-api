@@ -9,6 +9,7 @@ import type {
 } from "@/repositories";
 import { faker } from "@faker-js/faker/.";
 import { UserNotFoundError } from "@/errors";
+import { fixtureTransaction, fixtureUser } from "@/tests";
 
 describe("Create transaction use case test", () => {
   class CreateTransactionRepositoryStub {
@@ -28,12 +29,7 @@ describe("Create transaction use case test", () => {
 
   class GetUserByIdRepositoryStub {
     async execute(id: string) {
-      return {
-        id,
-        first_name: faker.person.firstName(),
-        last_name: faker.person.lastName(),
-        email: faker.internet.email(),
-      };
+      return fixtureUser;
     }
   }
   class IdGeneratorAdapter {
@@ -62,11 +58,9 @@ describe("Create transaction use case test", () => {
   }
 
   const transaction: CreateTransactionUseCaseInput = {
-    amount: faker.finance.amount(),
-    date: faker.date.anytime(),
-    name: faker.commerce.productName(),
+    ...fixtureTransaction,
     type: "EARNING",
-    user_id: faker.string.uuid(),
+    amount: fixtureTransaction.amount.toString(),
   };
 
   it("Should successfully create a transaction", async () => {
