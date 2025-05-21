@@ -5,7 +5,7 @@ import type {
   GetUserByIdRepository,
 } from "@/repositories";
 
-interface UpdateUserUseCaseInput {
+export interface UpdateUserUseCaseInput {
   first_name?: string;
   last_name?: string;
   email?: string;

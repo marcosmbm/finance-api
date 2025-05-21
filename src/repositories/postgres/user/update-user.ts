@@ -1,12 +1,12 @@
 import { prisma } from "@/db/prisma";
 
-interface UpdateUserRepositoryInput {
+export interface UpdateUserRepositoryInput {
   first_name?: string;
   last_name?: string;
   email?: string;
 }
 
-interface UpdateUserRepositoryOutput {
+export interface UpdateUserRepositoryOutput {
   id: string;
   first_name: string;
   last_name: string;
