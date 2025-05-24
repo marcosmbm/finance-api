@@ -1,6 +1,6 @@
 /** @type {import('jest').Config} */
 module.exports = {
-  collectCoverage: true,
+  collectCoverage: false,
   collectCoverageFrom: ["src/**/*.ts"],
   coverageDirectory: "coverage",
   coverageProvider: "v8",
@@ -11,4 +11,5 @@ module.exports = {
   transform: {
     ".+\\.ts$": "ts-jest",
   },
+  watchPathIgnorePatterns: ["<rootDir>/.postgres-data"],
 };
