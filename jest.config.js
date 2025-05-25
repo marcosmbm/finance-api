@@ -12,4 +12,5 @@ module.exports = {
     ".+\\.ts$": "ts-jest",
   },
   watchPathIgnorePatterns: ["<rootDir>/.postgres-data"],
+  globalSetup: "<rootDir>/jest.global-setup.js",
 };
