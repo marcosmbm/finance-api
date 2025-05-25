@@ -13,4 +13,5 @@ module.exports = {
   },
   watchPathIgnorePatterns: ["<rootDir>/.postgres-data"],
   globalSetup: "<rootDir>/jest.global-setup.js",
+  setupFilesAfterEnv: ["<rootDir>/jest.setup-file-after-env.js"],
 };
