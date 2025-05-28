@@ -47,4 +47,24 @@ describe("Get user balance repository test", () => {
     );
     expect(result.user_id).toBe(user.id);
   });
+
+  it("should return zero values when there is no registered transaction", async () => {
+    const sut = new GetUserBalanceRepository();
+
+    const user = await prisma.user.create({ data: fixtureUser });
+
+    const result = await sut.execute(user.id);
+
+    expect(result).toStrictEqual({
+      balance: 0,
+      earnings: 0,
+      expenses: 0,
+      user_id: user.id,
+    });
+
+    expect(result.earnings).toBe(0);
+    expect(result.expenses).toBe(0);
+    expect(result.balance).toBe(0);
+    expect(result.user_id).toBe(user.id);
+  });
 });
