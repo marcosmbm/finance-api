@@ -6,7 +6,7 @@ import "./config/module-alias";
 import { router } from "./routes";
 
 const port = process.env.SERVER_PORT;
-const app = express();
+export const app = express();
 
 app.use(cors());
 app.use(express.json());
