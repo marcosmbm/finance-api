@@ -1,92 +1,12 @@
-import "dotenv/config";
-import "./config/module-alias";
-import express, { Router } from "express";
 import cors from "cors";
+import "dotenv/config";
+import express from "express";
+import "./config/module-alias";
 
-import {
-  makeCreateTransactionController,
-  makeCreateUserController,
-  makeDeleteUserController,
-  makeGetUserByIdController,
-  makeUpdateUserController,
-  makeGetTransactionsByUserIdController,
-  makeUpdateTransactionController,
-  makeDeleteTransactionController,
-  makeGetUserBalance,
-} from "./factories";
+import { router } from "./routes";
 
 const port = process.env.SERVER_PORT;
 const app = express();
-const router = Router();
-
-router.get("/teste", async (_req, res) => {
-  res.json({ message: "Connected" });
-  return;
-});
-
-//users
-router.post("/users", async (req, res) => {
-  const { statusCode, body } = await makeCreateUserController().execute(req);
-  res.status(statusCode).json(body);
-  return;
-});
-
-router.get("/users/:id", async (req, res) => {
-  const { statusCode, body } = await makeGetUserByIdController().execute(req);
-  res.status(statusCode).json(body);
-  return;
-});
-
-router.patch("/users/:id", async (req, res) => {
-  const { statusCode, body } = await makeUpdateUserController().execute(req);
-  res.status(statusCode).json(body);
-  return;
-});
-
-router.delete("/users/:id", async (req, res) => {
-  const { statusCode, body } = await makeDeleteUserController().execute(req);
-  res.status(statusCode).json(body);
-  return;
-});
-
-router.get("/users/:id/balance", async (req, res) => {
-  const { statusCode, body } = await makeGetUserBalance().execute(req);
-  res.status(statusCode).json(body);
-  return;
-});
-
-//transactions
-router.post("/transactions", async (req, res) => {
-  const { statusCode, body } =
-    await makeCreateTransactionController().execute(req);
-
-  res.status(statusCode).json(body);
-  return;
-});
-
-router.get("/transactions", async (req, res) => {
-  const { statusCode, body } =
-    await makeGetTransactionsByUserIdController().execute(req);
-
-  res.status(statusCode).json(body);
-  return;
-});
-
-router.patch("/transactions/:id", async (req, res) => {
-  const { statusCode, body } =
-    await makeUpdateTransactionController().execute(req);
-
-  res.status(statusCode).json(body);
-  return;
-});
-
-router.delete("/transactions/:id", async (req, res) => {
-  const { statusCode, body } =
-    await makeDeleteTransactionController().execute(req);
-
-  res.status(statusCode).json(body);
-  return;
-});
 
 app.use(cors());
 app.use(express.json());
