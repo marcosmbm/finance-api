@@ -1,5 +1,6 @@
 import { app } from "@/app";
 import { fixtureTransaction, fixtureUser } from "@/tests";
+import { faker } from "@faker-js/faker/.";
 import { describe, expect, it } from "@jest/globals";
 import dayjs from "dayjs";
 import request from "supertest";
@@ -31,7 +32,7 @@ describe("Transaction routes e2e tests", () => {
     expect(response.body).not.toBeNull();
   });
 
-  it("GET /api/transactions?userId should return 200 when fetching transactions succesfully", async () => {
+  it("PATCH /api/transactions/:id should return 200 when update transaction successfully", async () => {
     const createdUserResponse = await request(app).post("/api/users").send({
       first_name: fixtureUser.first_name,
       last_name: fixtureUser.last_name,
@@ -49,13 +50,21 @@ describe("Transaction routes e2e tests", () => {
       date: dayjs(fixtureTransaction.date).format("YYYY-MM-DD"),
     };
 
-    await request(app).post("/api/transactions").send(transaction);
+    const transactionResponse = await request(app)
+      .post("/api/transactions")
+      .send(transaction);
 
-    const response = await request(app).get(
-      `/api/transactions?user_id=${createdUser.id}`,
-    );
+    const transactionUpdate = {
+      amount: faker.commerce.price(),
+    };
+
+    const response = await request(app)
+      .patch(`/api/transactions/${transactionResponse.body.id}`)
+      .send({
+        ...transactionUpdate,
+      });
 
     expect(response.status).toBe(200);
-    expect(response.body).toHaveLength(1);
+    expect(String(response.body.amount)).toBe(String(transactionUpdate.amount));
   });
 });
