@@ -67,4 +67,34 @@ describe("Transaction routes e2e tests", () => {
     expect(response.status).toBe(200);
     expect(String(response.body.amount)).toBe(String(transactionUpdate.amount));
   });
+
+  it("DELETE /api/transactions/:id should return 200 when delete transaction successfully", async () => {
+    const createdUserResponse = await request(app).post("/api/users").send({
+      first_name: fixtureUser.first_name,
+      last_name: fixtureUser.last_name,
+      email: fixtureUser.email,
+      password: fixtureUser.password,
+    });
+
+    const createdUser = createdUserResponse.body;
+
+    const transaction = {
+      user_id: createdUser.id,
+      amount: fixtureTransaction.amount,
+      name: fixtureTransaction.name,
+      type: fixtureTransaction.type,
+      date: dayjs(fixtureTransaction.date).format("YYYY-MM-DD"),
+    };
+
+    const transactionResponse = await request(app)
+      .post("/api/transactions")
+      .send(transaction);
+
+    const response = await request(app).delete(
+      `/api/transactions/${transactionResponse.body.id}`,
+    );
+
+    expect(response.status).toBe(200);
+    expect(response.body).not.toBeNull();
+  });
 });
