@@ -4,5 +4,82 @@
     "title": "Finace App API",
     "description": "API for Finance App that allows users to manage their finances",
     "version": "1.0.0"
+  },
+  "paths": {
+    "/api/users": {
+      "post": {
+        "summary": "Create a new user",
+        "tags": ["User"],
+        "parameters": [
+          {
+            "name": "body",
+            "required": true,
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/CreateUserParams"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "User created successfully"
+          },
+          "400": {
+            "description": "Invalid params"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "CreateUserParams": {
+      "type": "object",
+      "properties": {
+        "first_name": {
+          "type": "string",
+          "example": "Jhon"
+        },
+        "last_name": {
+          "type": "string",
+          "example": "Dos Santos"
+        },
+        "email": {
+          "type": "string",
+          "example": "jhon@jhon.com"
+        },
+        "password": {
+          "type": "string",
+          "example": "password"
+        }
+      }
+    },
+    "User": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "example": "595e4cfe-4fae-4d63-9bec-0394da3781e2"
+        },
+        "first_name": {
+          "type": "string",
+          "example": "Jhon"
+        },
+        "last_name": {
+          "type": "string",
+          "example": "Dos Santos"
+        },
+        "email": {
+          "type": "string",
+          "example": "jhon@jhon.com"
+        },
+        "password": {
+          "type": "string",
+          "example": "password"
+        }
+      }
+    }
   }
 }
