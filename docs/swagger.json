@@ -22,13 +22,28 @@
         ],
         "responses": {
           "201": {
-            "description": "User created successfully"
+            "description": "User created successfully",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "User created successfully"
+                }
+              }
+            }
           },
           "400": {
-            "description": "Invalid params"
+            "description": "Invalid params",
+            "schema": {
+              "$ref": "#/definitions/InvalidParamsErrorResponse"
+            }
           },
           "500": {
-            "description": "Internal server error"
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/InternalServerErrorResponse"
+            }
           }
         }
       }
@@ -51,13 +66,34 @@
         ],
         "responses": {
           "200": {
-            "description": "User found"
+            "description": "User found",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "User found"
+                }
+              }
+            }
           },
           "404": {
-            "description": "User not found"
+            "description": "User not found",
+            "schema": {
+              "$ref": "#/definitions/UserNotFoundErrorResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid params",
+            "schema": {
+              "$ref": "#/definitions/InvalidParamsErrorResponse"
+            }
           },
           "500": {
-            "description": "Internal server error"
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/InternalServerErrorResponse"
+            }
           }
         }
       },
@@ -78,13 +114,34 @@
         ],
         "responses": {
           "200": {
-            "description": "User deleted successfully"
+            "description": "User deleted successfully",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "User deleted successfully"
+                }
+              }
+            }
           },
           "404": {
-            "description": "User not found"
+            "description": "User not found",
+            "schema": {
+              "$ref": "#/definitions/UserNotFoundErrorResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid params",
+            "schema": {
+              "$ref": "#/definitions/InvalidParamsErrorResponse"
+            }
           },
           "500": {
-            "description": "Internal server error"
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/InternalServerErrorResponse"
+            }
           }
         }
       }
@@ -134,6 +191,33 @@
         "password": {
           "type": "string",
           "example": "password"
+        }
+      }
+    },
+    "InternalServerErrorResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "Internal server error"
+        }
+      }
+    },
+    "InvalidParamsErrorResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "Invalid params"
+        }
+      }
+    },
+    "UserNotFoundErrorResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "User not found"
         }
       }
     }
