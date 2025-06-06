@@ -201,6 +201,74 @@
           }
         }
       }
+    },
+    "/api/users/{id}/balance": {
+      "get": {
+        "summary": "Get user balance",
+        "tags": ["User"],
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "type": "string",
+            "description": "ID of the user to get",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "User found"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User balance",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "balance": {
+                  "type": "number",
+                  "example": 1000
+                },
+                "earnings": {
+                  "type": "number",
+                  "example": 2000
+                },
+                "expenses": {
+                  "type": "number",
+                  "example": 1000
+                },
+                "user_id": {
+                  "type": "string",
+                  "example": "595e4cfe-4fae-4d63-9bec-0394da3781e2"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "schema": {
+              "$ref": "#/definitions/UserNotFoundErrorResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid params",
+            "schema": {
+              "$ref": "#/definitions/InvalidParamsErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/InternalServerErrorResponse"
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
