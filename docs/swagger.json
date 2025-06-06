@@ -144,6 +144,62 @@
             }
           }
         }
+      },
+      "patch": {
+        "summary": "Update user",
+        "tags": ["User"],
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "type": "string",
+            "description": "ID of the user to get",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          {
+            "name": "body",
+            "required": true,
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/UpdateUserParams"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User update successfully",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "User found"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "schema": {
+              "$ref": "#/definitions/UserNotFoundErrorResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid params",
+            "schema": {
+              "$ref": "#/definitions/InvalidParamsErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/InternalServerErrorResponse"
+            }
+          }
+        }
       }
     }
   },
@@ -166,6 +222,23 @@
         "password": {
           "type": "string",
           "example": "password"
+        }
+      }
+    },
+    "UpdateUserParams": {
+      "type": "object",
+      "properties": {
+        "first_name": {
+          "type": "string",
+          "example": "Jhon"
+        },
+        "last_name": {
+          "type": "string",
+          "example": "Dos Santos"
+        },
+        "email": {
+          "type": "string",
+          "example": "jhon@jhon.com"
         }
       }
     },
