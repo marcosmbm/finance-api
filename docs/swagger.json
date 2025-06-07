@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "Finace App API",
+    "title": "Finance App API",
     "description": "API for Finance App that allows users to manage their finances",
     "version": "1.0.0"
   },
@@ -269,6 +269,202 @@
           }
         }
       }
+    },
+    "/api/transactions": {
+      "post": {
+        "summary": "Create a new transaction",
+        "tags": ["Transaction"],
+        "parameters": [
+          {
+            "name": "body",
+            "required": true,
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/CreateTransaction"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Transaction created successfully",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Transaction created successfully"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid params",
+            "schema": {
+              "$ref": "#/definitions/InvalidParamsErrorResponse"
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "schema": {
+              "$ref": "#/definitions/UserNotFoundErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/InternalServerErrorResponse"
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Get transactions by user id",
+        "tags": ["Transaction"],
+        "parameters": [
+          {
+            "name": "user_id",
+            "required": true,
+            "in": "query",
+            "type": "string",
+            "description": "ID of the user to get"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Transactions list successfully",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Transaction"
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid params",
+            "schema": {
+              "$ref": "#/definitions/InvalidParamsErrorResponse"
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "schema": {
+              "$ref": "#/definitions/UserNotFoundErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/InternalServerErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/api/transactions/{id}": {
+      "patch": {
+        "summary": "Update a transaction",
+        "tags": ["Transaction"],
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "type": "string",
+            "description": "ID of the transaction to update",
+            "schema": {
+              "$ref": "#/definitions/Transaction"
+            }
+          },
+          {
+            "name": "body",
+            "required": true,
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/UpdateTransaction"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Transaction updated successfully",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Transaction updated successfully"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid params",
+            "schema": {
+              "$ref": "#/definitions/InvalidParamsErrorResponse"
+            }
+          },
+          "404": {
+            "description": "Transaction not found",
+            "schema": {
+              "$ref": "#/definitions/TransactionNotFoundErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/InternalServerErrorResponse"
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Update a transaction",
+        "tags": ["Transaction"],
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "type": "string",
+            "description": "ID of the transaction to update",
+            "schema": {
+              "$ref": "#/definitions/Transaction"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Transaction deleted successfully",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Transaction deleted successfully"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid params",
+            "schema": {
+              "$ref": "#/definitions/InvalidParamsErrorResponse"
+            }
+          },
+          "404": {
+            "description": "Transaction not found",
+            "schema": {
+              "$ref": "#/definitions/TransactionNotFoundErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/InternalServerErrorResponse"
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -359,6 +555,93 @@
         "message": {
           "type": "string",
           "example": "User not found"
+        }
+      }
+    },
+    "CreateTransaction": {
+      "type": "object",
+      "properties": {
+        "user_id": {
+          "type": "string",
+          "example": "2fba8269-e92e-4713-ba52-d3bb58730999"
+        },
+        "amount": {
+          "type": "string",
+          "example": "2000"
+        },
+        "name": {
+          "type": "string",
+          "example": "salario"
+        },
+        "type": {
+          "type": "string",
+          "example": "EARNING",
+          "description": "EARNING, EXPENSE"
+        },
+        "date": {
+          "type": "string",
+          "example": "2025-01-01"
+        }
+      }
+    },
+    "UpdateTransaction": {
+      "type": "object",
+      "properties": {
+        "amount": {
+          "type": "string",
+          "example": "2000"
+        },
+        "name": {
+          "type": "string",
+          "example": "salario"
+        },
+        "type": {
+          "type": "string",
+          "example": "EARNING",
+          "description": "EARNING, EXPENSE"
+        },
+        "date": {
+          "type": "string",
+          "example": "2025-01-01"
+        }
+      }
+    },
+    "Transaction": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "example": "7466cdb8-7416-44d6-8704-04d8f0754d3f"
+        },
+        "user_id": {
+          "type": "string",
+          "example": "2fba8269-e92e-4713-ba52-d3bb58730999"
+        },
+        "amount": {
+          "type": "string",
+          "example": "2000"
+        },
+        "name": {
+          "type": "string",
+          "example": "salario"
+        },
+        "type": {
+          "type": "string",
+          "example": "EARNING",
+          "description": "EARNING, EXPENSE"
+        },
+        "date": {
+          "type": "string",
+          "example": "2025-01-01"
+        }
+      }
+    },
+    "TransactionNotFoundErrorResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "Transaction not found"
         }
       }
     }
