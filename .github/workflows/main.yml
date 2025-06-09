@@ -7,11 +7,11 @@ jobs:
   check: 
     runs-on: ubuntu-latest
     setps:
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v2
 
       - name: Use Node.js
-        run: actions/setup-node@v2
+        uses: actions/setup-node@v2
         with:
           node-version: '20'
 
