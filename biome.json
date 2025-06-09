@@ -17,7 +17,7 @@
         "useSortedClasses": "error"
       }
     },
-    "ignore": ["node_modules", "dist", "generators"]
+    "ignore": ["node_modules", "dist", "generators", ".postgres-data"]
   },
   "formatter": {
     "enabled": true,

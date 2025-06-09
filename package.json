@@ -13,7 +13,8 @@
     "test": "dotenv -e .env.test -- jest --detectOpenHandles --forceExit",
     "test:watch": "npm run test -- --watch",
     "test:coverage": "npm run test -- --coverage",
-    "test:clear": "npm run test -- --clearCache"
+    "test:clear": "npm run test -- --clearCache",
+    "lint:check": "biome check src/**/*.ts"
   },
   "keywords": [],
   "author": {
@@ -48,9 +49,7 @@
     "typescript": "^5.8.3"
   },
   "commitlint": {
-    "extends": [
-      "@commitlint/config-conventional"
-    ]
+    "extends": ["@commitlint/config-conventional"]
   },
   "dependencies": {
     "@prisma/client": "^6.7.0",
