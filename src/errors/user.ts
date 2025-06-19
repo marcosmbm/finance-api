@@ -11,3 +11,10 @@ export class EmailAlreadyInUseError extends Error {
     this.name = "EmailAlreadyInUseError";
   }
 }
+
+export class PasswordInvalidError extends Error {
+  constructor() {
+    super("Password is invalid");
+    this.name = "PasswordInvalidError";
+  }
+}
